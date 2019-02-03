@@ -4,6 +4,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.transfer.service.LifecycleManager;
 import com.transfer.spark.SparkController;
+import org.h2.tools.Server;
 
 public class Application {
 

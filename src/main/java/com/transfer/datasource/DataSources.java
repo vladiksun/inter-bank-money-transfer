@@ -30,7 +30,6 @@ public class DataSources extends AbstractModule {
             dataSource.setJdbcUrl(dbUrl);
             dataSource.setUsername(dbUserName);
             dataSource.setPassword(dbPassword);
-            dataSource.setDefaultAutoCommit(false);
         }
         catch (Exception e) {
             throw new RuntimeException(e);

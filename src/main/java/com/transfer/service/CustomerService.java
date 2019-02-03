@@ -2,7 +2,7 @@ package com.transfer.service;
 
 import com.transfer.exception.CustomerNotFoundException;
 import com.transfer.exception.InvalidParameterException;
-import com.transfer.jooq.stubs.tables.pojos.Customer;
+import com.transfer.entity.Customer;
 
 import java.util.List;
 

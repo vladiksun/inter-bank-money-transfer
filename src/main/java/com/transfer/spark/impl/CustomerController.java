@@ -1,7 +1,7 @@
 package com.transfer.spark.impl;
 
 import com.google.inject.Inject;
-import com.transfer.jooq.stubs.tables.pojos.Customer;
+import com.transfer.entity.Customer;
 import com.transfer.service.CustomerService;
 import com.transfer.spark.SparkController;
 
