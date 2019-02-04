@@ -1,12 +1,12 @@
 package com.transfer.spark;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Singleton;
 import com.transfer.spark.impl.AccountController;
 import com.transfer.spark.impl.CustomerController;
 import com.transfer.spark.impl.ErrorHandler;
 import com.transfer.spark.impl.TransactionController;
 
-import javax.inject.Singleton;
 
 public class ControllerModule extends AbstractModule {
 

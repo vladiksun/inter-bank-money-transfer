@@ -12,35 +12,33 @@ import java.sql.Timestamp;
 
 public class TransactionLog implements Serializable {
 
-    private static final long serialVersionUID = -1572979739;
+    private static final long serialVersionUID = 211247371418598810L;
 
     private Long       txId;
-    private Long       accountId;
+    private Long fromAccountNumber;
+    private Long toAccountNumber;
     private BigDecimal amount;
-    private BigDecimal balance;
     private Timestamp  timeStamp;
 
     public TransactionLog() {}
 
     public TransactionLog(TransactionLog value) {
         this.txId = value.txId;
-        this.accountId = value.accountId;
+        this.fromAccountNumber = value.fromAccountNumber;
+        this.toAccountNumber = value.toAccountNumber;
         this.amount = value.amount;
-        this.balance = value.balance;
         this.timeStamp = value.timeStamp;
     }
 
     public TransactionLog(
-        Long       txId,
-        Long       accountId,
+        Long       fromAccountNumber,
+        Long       toAccountNumber,
         BigDecimal amount,
-        BigDecimal balance,
         Timestamp  timeStamp
     ) {
-        this.txId = txId;
-        this.accountId = accountId;
+        this.fromAccountNumber = fromAccountNumber;
+        this.toAccountNumber = toAccountNumber;
         this.amount = amount;
-        this.balance = balance;
         this.timeStamp = timeStamp;
     }
 
@@ -52,12 +50,12 @@ public class TransactionLog implements Serializable {
         this.txId = txId;
     }
 
-    public Long getAccountId() {
-        return this.accountId;
+    public Long getFromAccountNumber() {
+        return this.fromAccountNumber;
     }
 
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
+    public void setFromAccountNumber(Long fromAccountNumber) {
+        this.fromAccountNumber = fromAccountNumber;
     }
 
     public BigDecimal getAmount() {
@@ -68,14 +66,6 @@ public class TransactionLog implements Serializable {
         this.amount = amount;
     }
 
-    public BigDecimal getBalance() {
-        return this.balance;
-    }
-
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
-    }
-
     public Timestamp getTimeStamp() {
         return this.timeStamp;
     }
@@ -84,18 +74,23 @@ public class TransactionLog implements Serializable {
         this.timeStamp = timeStamp;
     }
 
+    public Long getToAccountNumber() {
+        return toAccountNumber;
+    }
+
+    public void setToAccountNumber(Long toAccountNumber) {
+        this.toAccountNumber = toAccountNumber;
+    }
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("TransactionLog (");
-
-        sb.append(txId);
-        sb.append(", ").append(accountId);
-        sb.append(", ").append(amount);
-        sb.append(", ").append(balance);
-        sb.append(", ").append(timeStamp);
-
-        sb.append(")");
-        return sb.toString();
+        return "TransactionLog{" +
+                "txId=" + txId +
+                ", fromAccountNumber=" + fromAccountNumber +
+                ", toAccountNumber=" + toAccountNumber +
+                ", amount=" + amount +
+                ", timeStamp=" + timeStamp +
+                '}';
     }
 
     @Override
@@ -104,14 +99,14 @@ public class TransactionLog implements Serializable {
         if (!(o instanceof TransactionLog)) return false;
         TransactionLog that = (TransactionLog) o;
         return Objects.equal(txId, that.txId) &&
-                Objects.equal(accountId, that.accountId) &&
+                Objects.equal(fromAccountNumber, that.fromAccountNumber) &&
+                Objects.equal(toAccountNumber, that.toAccountNumber) &&
                 Objects.equal(amount, that.amount) &&
-                Objects.equal(balance, that.balance) &&
                 Objects.equal(timeStamp, that.timeStamp);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(txId, accountId, amount, balance, timeStamp);
+        return Objects.hashCode(txId, fromAccountNumber, toAccountNumber, amount, timeStamp);
     }
 }

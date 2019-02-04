@@ -1,8 +1,8 @@
 package com.transfer.spark.impl;
 
+import com.google.inject.Singleton;
 import com.transfer.spark.SparkController;
 
-import javax.inject.Singleton;
 import static spark.Spark.*;
 
 @Singleton

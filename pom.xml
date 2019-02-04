@@ -64,6 +64,7 @@
             <artifactId>h2</artifactId>
             <version>${h2.version}</version>
         </dependency>
+
         <dependency>
             <groupId>com.jolbox</groupId>
             <artifactId>bonecp</artifactId>
@@ -80,6 +81,12 @@
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>${commons.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.joda</groupId>
+            <artifactId>joda-money</artifactId>
+            <version>1.0.1</version>
         </dependency>
 
         <!-- Logging -->
@@ -183,7 +190,7 @@
                         </goals>
                         <configuration>
                             <driver>${db.driver}</driver>
-                            <url>${db.url}</url>
+                            <url>${db.url.inMemory}</url>
                             <username>${db.username}</username>
                             <password>${db.password}</password>
 
@@ -223,7 +230,7 @@
                         <configuration>
                             <jdbc>
                                 <driver>${db.driver}</driver>
-                                <url>${db.url}</url>
+                                <url>${db.url.inMemory}</url>
                                 <user>${db.username}</user>
                                 <password>${db.password}</password>
                             </jdbc>

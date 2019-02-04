@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 public class Customer implements Serializable {
 
-    private static final long serialVersionUID = 2131654948;
+    private static final long serialVersionUID = 888135670889399684L;
 
     private Long   customerId;
     private String firstName;

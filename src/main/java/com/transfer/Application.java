@@ -4,7 +4,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.transfer.service.LifecycleManager;
 import com.transfer.spark.SparkController;
-import org.h2.tools.Server;
 
 public class Application {
 
@@ -17,6 +16,7 @@ public class Application {
         injector.getInstance(LifecycleManager.class).onStart();
         activateSparkControllers(injector);
     }
+
 
     private void activateSparkControllers(Injector injector) {
         injector.getAllBindings().keySet().stream()

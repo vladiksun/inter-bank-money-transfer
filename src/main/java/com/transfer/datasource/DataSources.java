@@ -6,8 +6,8 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.jolbox.bonecp.BoneCPDataSource;
 import org.jooq.Configuration;
-
-import javax.sql.DataSource;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DefaultConfiguration;
 
 public class DataSources extends AbstractModule {
 
@@ -16,25 +16,30 @@ public class DataSources extends AbstractModule {
 
     @Provides
     @Singleton
-    DataSource provideDataSource(@Named("db.driver") String dbDriver,
-                                 @Named("db.url") String dbUrl,
-                                 @Named("db.username") String dbUserName,
-                                 @Named("db.password") String dbPassword) {
+    Configuration provideConfiguration(@Named("db.driver") String dbDriver,
+                                       @Named("db.url") String dbUrl,
+                                       @Named("db.username") String dbUserName,
+                                       @Named("db.password") String dbPassword) {
+
 
         BoneCPDataSource dataSource;
 
         try {
-            // We're using BoneCP here to configure a connection pool
             dataSource = new BoneCPDataSource();
             dataSource.setDriverClass(dbDriver);
             dataSource.setJdbcUrl(dbUrl);
             dataSource.setUsername(dbUserName);
             dataSource.setPassword(dbPassword);
+            dataSource.setDefaultAutoCommit(true);
         }
         catch (Exception e) {
             throw new RuntimeException(e);
         }
 
-        return dataSource;
+        Configuration configuration = new DefaultConfiguration()
+                .set(dataSource)
+                .set(SQLDialect.DEFAULT);
+
+        return configuration;
     }
 }

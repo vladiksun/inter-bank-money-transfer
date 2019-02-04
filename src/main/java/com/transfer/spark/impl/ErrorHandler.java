@@ -1,11 +1,13 @@
 package com.transfer.spark.impl;
 
+import com.google.inject.Singleton;
 import com.transfer.spark.SparkController;
 import com.transfer.spark.util.ErrorDescription;
 
 import static com.transfer.spark.util.JsonUtils.*;
 import static spark.Spark.*;
 
+@Singleton
 public class ErrorHandler implements SparkController {
 
     @Override

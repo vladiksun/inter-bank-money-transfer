@@ -1,46 +1,30 @@
 package com.transfer.service.impl;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.transfer.dao.CustomerDao;
+import com.transfer.entity.Customer;
 import com.transfer.exception.CustomerNotFoundException;
 import com.transfer.exception.InvalidParameterException;
-import com.transfer.entity.Customer;
-import com.transfer.jooq.stubs.tables.records.CustomerRecord;
 import com.transfer.service.CustomerService;
 import org.apache.commons.lang.StringUtils;
-import org.jooq.DSLContext;
-import org.jooq.SQLDialect;
-import org.jooq.impl.DSL;
 
-import javax.inject.Singleton;
-import javax.sql.DataSource;
 import java.util.List;
-
-import static com.transfer.jooq.stubs.Tables.CUSTOMER;
 
 @Singleton
 public class CustomerServiceImpl implements CustomerService {
 
-    private final DataSource dataSource;
+    private final CustomerDao customerDao;
 
     @Inject
-    public CustomerServiceImpl(final DataSource dataSource) {
-        this.dataSource = dataSource;
+    public CustomerServiceImpl(final CustomerDao customerDao) {
+        this.customerDao = customerDao;
     }
 
     @Override
     public Customer createCustomer(Customer customer) throws InvalidParameterException {
         validateCustomerFields(customer);
-
-        DSLContext ctx = DSL.using(dataSource, SQLDialect.DEFAULT);
-        CustomerRecord customerRecord = ctx.newRecord(CUSTOMER);
-        customerRecord.setFirstName(customer.getFirstName());
-        customerRecord.setLastName(customer.getLastName());
-        customerRecord.setEmail(customer.getEmail());
-        customerRecord.store();
-
-        String s = customerRecord.formatJSON();
-
-        return customer;
+        return customerDao.createCustomer(customer);
     }
 
     @Override
@@ -64,6 +48,10 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     private void validateCustomerFields(Customer customer) throws InvalidParameterException {
+        if (customer == null) {
+            throw new InvalidParameterException("Customer details are not specified");
+        }
+
         if (StringUtils.isBlank(customer.getFirstName())) {
             throw new InvalidParameterException("First name must not be null");
         }

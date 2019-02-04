@@ -1,10 +1,11 @@
 package com.transfer.service;
 
-import com.transfer.entity.AccountDetails;
+import com.transfer.entity.Account;
 import com.transfer.exception.AccountNotFoundException;
 import com.transfer.exception.CustomerNotFoundException;
 import com.transfer.exception.IllegalAccountTypeException;
 import com.transfer.exception.InvalidParameterException;
+import org.jooq.Configuration;
 
 import java.rmi.RemoteException;
 import java.util.List;
@@ -19,7 +20,7 @@ public interface AccountService {
      * @throws IllegalAccountTypeException when account type is not valid
      * @throws CustomerNotFoundException when the customer with <code>customerId</code> does not exist.
      */
-    AccountDetails createAccount(AccountDetails accountToCreate, long customerId) throws IllegalAccountTypeException,
+    Account createAccount(Account accountToCreate, long customerId) throws IllegalAccountTypeException,
                                                                             CustomerNotFoundException,
                                                                             InvalidParameterException;
 
@@ -41,9 +42,11 @@ public interface AccountService {
                                                                                   CustomerNotFoundException,
                                                                                   AccountNotFoundException;
     //TODO: javadoc
-    List<AccountDetails> getAccountsOfCustomer(long customerId) throws InvalidParameterException, CustomerNotFoundException;
+    List<Account> getAccountsOfCustomer(long customerId) throws InvalidParameterException, CustomerNotFoundException;
     //TODO: javadoc
     List<Long> getCustomerIds(long accountId) throws InvalidParameterException, AccountNotFoundException;
     //TODO: javadoc
-    AccountDetails getAccountDetails(long accountId) throws InvalidParameterException, AccountNotFoundException;
+    Account getAccountDetails(long accountId) throws InvalidParameterException, AccountNotFoundException;
+
+    void setAccountBalance(Account account);
 }

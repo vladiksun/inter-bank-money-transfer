@@ -1,20 +1,30 @@
 package com.transfer.service.impl;
 
-import com.transfer.entity.AccountDetails;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.transfer.dao.AccountDao;
+import com.transfer.entity.Account;
 import com.transfer.exception.AccountNotFoundException;
 import com.transfer.exception.CustomerNotFoundException;
 import com.transfer.exception.IllegalAccountTypeException;
 import com.transfer.exception.InvalidParameterException;
 import com.transfer.service.AccountService;
 
-import javax.inject.Singleton;
 import java.rmi.RemoteException;
 import java.util.List;
 
 @Singleton
 public class AccountServiceImpl implements AccountService {
+
+    private final AccountDao accountDao;
+
+    @Inject
+    public AccountServiceImpl(AccountDao accountDao) {
+        this.accountDao = accountDao;
+    }
+
     @Override
-    public AccountDetails createAccount(AccountDetails accountToCreate, long customerId) throws IllegalAccountTypeException, CustomerNotFoundException, InvalidParameterException {
+    public Account createAccount(Account accountToCreate, long customerId) throws IllegalAccountTypeException, CustomerNotFoundException, InvalidParameterException {
         return null;
     }
 
@@ -34,7 +44,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<AccountDetails> getAccountsOfCustomer(long customerId) throws InvalidParameterException, CustomerNotFoundException {
+    public List<Account> getAccountsOfCustomer(long customerId) throws InvalidParameterException, CustomerNotFoundException {
         return null;
     }
 
@@ -44,7 +54,21 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDetails getAccountDetails(long accountId) throws InvalidParameterException, AccountNotFoundException {
-        return null;
+    public Account getAccountDetails(long accountId) throws AccountNotFoundException {
+        Account account = accountDao.getAccountDetails(accountId);
+        validateAccount(account, accountId);
+        return account;
+    }
+
+
+    @Override
+    public void setAccountBalance(Account account) {
+        accountDao.setAccountBalance(account);
+    }
+
+    private void validateAccount(Account account, long accountID) throws AccountNotFoundException {
+        if (account == null) {
+            throw new AccountNotFoundException(String.format("Account with number = [ %d ] is not found", accountID));
+        }
     }
 }

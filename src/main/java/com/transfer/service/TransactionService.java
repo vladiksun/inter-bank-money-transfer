@@ -1,6 +1,8 @@
 package com.transfer.service;
 
 import com.transfer.entity.TransactionDetails;
+import com.transfer.entity.TransactionLog;
+import com.transfer.entity.UserTransaction;
 import com.transfer.exception.*;
 
 import java.math.BigDecimal;
@@ -35,9 +37,7 @@ public interface TransactionService {
                                                                                     AccountNotFoundException,
                                                                                     IllegalAccountTypeException;
 
-    void transferFunds(BigDecimal amount, String description, long fromAccountId, long toAccountId)
-                                                                                    throws InvalidParameterException,
-                                                                                            AccountNotFoundException,
-                                                                                            InsufficientFundsException,
-                                                                                            InsufficientCreditException;
+    TransactionLog transferFunds(UserTransaction userTransaction) throws InvalidParameterException,
+                                                                            AccountNotFoundException,
+                                                                            InsufficientFundsException;
 }
