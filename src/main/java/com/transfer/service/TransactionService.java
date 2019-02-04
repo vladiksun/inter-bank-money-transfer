@@ -15,29 +15,17 @@ public interface TransactionService {
     // that correspond to the txs for the specified
     // account
     List<TransactionDetails> getAccountTransactions(Date startDate, Date endDate, String accountId)
-                                                                                    throws InvalidParameterException;
+                                                                                    throws ApplicationException;
 
-    TransactionDetails getTransactionDetails(long transactionID) throws TransactionNotFoundException, InvalidParameterException;
+    TransactionDetails getTransactionDetails(long transactionID) throws ApplicationException;
 
-    void withdraw(BigDecimal amount, String description, long accountId) throws InvalidParameterException,
-                                                                                AccountNotFoundException,
-                                                                                IllegalAccountTypeException,
-                                                                                InsufficientFundsException;
+    void withdraw(BigDecimal amount, String description, long accountId) throws ApplicationException;
 
-    void deposit(BigDecimal amount, String description, long accountId) throws InvalidParameterException,
-                                                                                AccountNotFoundException,
-                                                                                IllegalAccountTypeException;
+    void deposit(BigDecimal amount, String description, long accountId) throws ApplicationException;
 
-    void makeCharge(BigDecimal amount, String description, long accountId) throws InvalidParameterException,
-                                                                                    AccountNotFoundException,
-                                                                                    IllegalAccountTypeException,
-                                                                                    InsufficientCreditException;
+    void makeCharge(BigDecimal amount, String description, long accountId) throws ApplicationException;
 
-    void makePayment(BigDecimal amount, String description, long accountId) throws InvalidParameterException,
-                                                                                    AccountNotFoundException,
-                                                                                    IllegalAccountTypeException;
+    void makePayment(BigDecimal amount, String description, long accountId) throws ApplicationException;
 
-    TransactionLog transferFunds(UserTransaction userTransaction) throws InvalidParameterException,
-                                                                            AccountNotFoundException,
-                                                                            InsufficientFundsException;
+    TransactionLog transferFunds(UserTransaction userTransaction) throws ApplicationException;
 }

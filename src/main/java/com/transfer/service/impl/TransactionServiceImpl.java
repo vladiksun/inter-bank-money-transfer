@@ -15,7 +15,6 @@ import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
-import org.jooq.TransactionalCallable;
 import org.jooq.impl.DSL;
 
 import java.math.BigDecimal;
@@ -44,50 +43,38 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<TransactionDetails> getAccountTransactions(Date startDate, Date endDate, String accountId) throws InvalidParameterException {
+    public List<TransactionDetails> getAccountTransactions(Date startDate, Date endDate, String accountId)
+            throws ApplicationException {
         return null;
     }
 
     @Override
-    public TransactionDetails getTransactionDetails(long transactionID) throws TransactionNotFoundException,
-                                                                                InvalidParameterException {
+    public TransactionDetails getTransactionDetails(long transactionID) throws ApplicationException {
         return null;
     }
 
     @Override
-    public void withdraw(BigDecimal amount, String description, long accountId) throws InvalidParameterException,
-                                                                                        AccountNotFoundException,
-                                                                                        IllegalAccountTypeException,
-                                                                                        InsufficientFundsException {
+    public void withdraw(BigDecimal amount, String description, long accountId) throws ApplicationException {
 
     }
 
     @Override
-    public void deposit(BigDecimal amount, String description, long accountId) throws InvalidParameterException,
-                                                                                        AccountNotFoundException,
-                                                                                        IllegalAccountTypeException {
+    public void deposit(BigDecimal amount, String description, long accountId) throws ApplicationException {
 
     }
 
     @Override
-    public void makeCharge(BigDecimal amount, String description, long accountId) throws InvalidParameterException,
-                                                                                        AccountNotFoundException,
-                                                                                        IllegalAccountTypeException,
-                                                                                        InsufficientCreditException {
+    public void makeCharge(BigDecimal amount, String description, long accountId) throws ApplicationException {
 
     }
 
     @Override
-    public void makePayment(BigDecimal amount, String description, long accountId) throws InvalidParameterException,
-                                                                                            AccountNotFoundException,
-                                                                                            IllegalAccountTypeException {
+    public void makePayment(BigDecimal amount, String description, long accountId) throws ApplicationException {
 
     }
 
     @Override
-    public TransactionLog transferFunds(UserTransaction userTransaction) throws InvalidParameterException,
-                                                                                AccountNotFoundException,
-                                                                                InsufficientFundsException {
+    public TransactionLog transferFunds(UserTransaction userTransaction) throws ApplicationException {
         validateTransactionParameters(userTransaction);
 
         DSLContext ctx = DSL.using(configuration);
@@ -104,9 +91,12 @@ public class TransactionServiceImpl implements TransactionService {
                 throw new InvalidParameterException("Fail to transfer fund, the source and destination account are of different currency");
             }
 
-            Money transactionMoney = Money.of(fromCurrencyUnit, userTransaction.getAmount().setScale(fromCurrencyUnit.getDecimalPlaces(), RoundingMode.HALF_EVEN));
-            Money fromAccountMoney = Money.of(fromCurrencyUnit, fromAccount.getBalance().setScale(fromCurrencyUnit.getDecimalPlaces(), RoundingMode.HALF_EVEN));
-            Money toAccountMoney = Money.of(toCurrencyUnit, toAccount.getBalance().setScale(toCurrencyUnit.getDecimalPlaces(), RoundingMode.HALF_EVEN));
+            Money transactionMoney = Money.of(fromCurrencyUnit, userTransaction.getAmount()
+                    .setScale(fromCurrencyUnit.getDecimalPlaces(), RoundingMode.HALF_EVEN));
+            Money fromAccountMoney = Money.of(fromCurrencyUnit, fromAccount.getBalance()
+                    .setScale(fromCurrencyUnit.getDecimalPlaces(), RoundingMode.HALF_EVEN));
+            Money toAccountMoney = Money.of(toCurrencyUnit, toAccount.getBalance()
+                    .setScale(toCurrencyUnit.getDecimalPlaces(), RoundingMode.HALF_EVEN));
 
             Money fromAccountLeftOver = fromAccountMoney.minus(transactionMoney);
 

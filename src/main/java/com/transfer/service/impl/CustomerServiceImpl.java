@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.transfer.dao.CustomerDao;
 import com.transfer.entity.Customer;
-import com.transfer.exception.CustomerNotFoundException;
+import com.transfer.exception.ApplicationException;
 import com.transfer.exception.InvalidParameterException;
 import com.transfer.service.CustomerService;
 import org.apache.commons.lang.StringUtils;
@@ -28,22 +28,22 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void removeCustomer(long customerId) throws CustomerNotFoundException, InvalidParameterException {
+    public void removeCustomer(long customerId) throws ApplicationException {
 
     }
 
     @Override
-    public Customer getCustomerById(long customerId) throws CustomerNotFoundException, InvalidParameterException {
+    public Customer getCustomerById(long customerId) throws ApplicationException {
         return null;
     }
 
     @Override
-    public List<Customer> getCustomersByAccount(long accountId) throws CustomerNotFoundException, InvalidParameterException {
+    public List<Customer> getCustomersByAccount(long accountId) throws ApplicationException {
         return null;
     }
 
     @Override
-    public List<Customer> getCustomersByLastName(String lastName) throws InvalidParameterException {
+    public List<Customer> getCustomersByLastName(String lastName) throws ApplicationException {
         return null;
     }
 

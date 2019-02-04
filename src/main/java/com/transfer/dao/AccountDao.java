@@ -4,7 +4,7 @@ package com.transfer.dao;
 import com.transfer.entity.Account;
 import org.jooq.Configuration;
 
-public interface AccountDao extends Dao {
+public interface AccountDao {
 
     Account getAccountDetails(long accountId);
 

@@ -6,7 +6,6 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.jolbox.bonecp.BoneCPDataSource;
 import org.jooq.Configuration;
-import org.jooq.SQLDialect;
 import org.jooq.impl.DefaultConfiguration;
 
 public class DataSources extends AbstractModule {
@@ -36,9 +35,7 @@ public class DataSources extends AbstractModule {
             throw new RuntimeException(e);
         }
 
-        Configuration configuration = new DefaultConfiguration()
-                .set(dataSource)
-                .set(SQLDialect.DEFAULT);
+        Configuration configuration = new DefaultConfiguration().set(dataSource);
 
         return configuration;
     }

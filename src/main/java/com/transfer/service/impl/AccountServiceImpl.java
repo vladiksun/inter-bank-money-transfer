@@ -5,12 +5,9 @@ import com.google.inject.Singleton;
 import com.transfer.dao.AccountDao;
 import com.transfer.entity.Account;
 import com.transfer.exception.AccountNotFoundException;
-import com.transfer.exception.CustomerNotFoundException;
-import com.transfer.exception.IllegalAccountTypeException;
-import com.transfer.exception.InvalidParameterException;
+import com.transfer.exception.ApplicationException;
 import com.transfer.service.AccountService;
 
-import java.rmi.RemoteException;
 import java.util.List;
 
 @Singleton
@@ -24,37 +21,37 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account createAccount(Account accountToCreate, long customerId) throws IllegalAccountTypeException, CustomerNotFoundException, InvalidParameterException {
+    public Account createAccount(Account accountToCreate, long customerId) throws ApplicationException {
         return null;
     }
 
     @Override
-    public void removeAccount(long accountId) throws RemoteException, InvalidParameterException, AccountNotFoundException {
+    public void removeAccount(long accountId) throws ApplicationException {
 
     }
 
     @Override
-    public void addCustomerToAccount(long customerId, long accountId) throws InvalidParameterException, CustomerNotFoundException, AccountNotFoundException {
+    public void addCustomerToAccount(long customerId, long accountId) throws ApplicationException {
 
     }
 
     @Override
-    public void removeCustomerFromAccount(long customerId, long accountId) throws InvalidParameterException, CustomerNotFoundException, AccountNotFoundException {
+    public void removeCustomerFromAccount(long customerId, long accountId) throws ApplicationException {
 
     }
 
     @Override
-    public List<Account> getAccountsOfCustomer(long customerId) throws InvalidParameterException, CustomerNotFoundException {
+    public List<Account> getAccountsOfCustomer(long customerId) throws ApplicationException {
         return null;
     }
 
     @Override
-    public List<Long> getCustomerIds(long accountId) throws InvalidParameterException, AccountNotFoundException {
+    public List<Long> getCustomerIds(long accountId) throws ApplicationException {
         return null;
     }
 
     @Override
-    public Account getAccountDetails(long accountId) throws AccountNotFoundException {
+    public Account getAccountDetails(long accountId) throws ApplicationException {
         Account account = accountDao.getAccountDetails(accountId);
         validateAccount(account, accountId);
         return account;

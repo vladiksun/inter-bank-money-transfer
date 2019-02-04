@@ -2,7 +2,7 @@ package com.transfer.dao;
 
 import com.transfer.entity.Customer;
 
-public interface CustomerDao extends Dao {
+public interface CustomerDao {
 
     Customer createCustomer(Customer customer);
 }
