@@ -18,9 +18,9 @@ public class TransactionLogDaoImpl implements TransactionLogDao {
 
     private RecordMapper<Record, TransactionLog> transactionLogMapper = record -> {
         TransactionLogRecord transactionLogRecord = (TransactionLogRecord) record;
-        return new TransactionLog(transactionLogRecord.getFromAccountNumber(),
-                                    transactionLogRecord.getToAccountNumber(),
+        return new TransactionLog(transactionLogRecord.getAccountNumber(),
                                     transactionLogRecord.getAmount(),
+                                    transactionLogRecord.getBalance(),
                                     transactionLogRecord.getTimeStamp());
     };
 
@@ -35,15 +35,15 @@ public class TransactionLogDaoImpl implements TransactionLogDao {
     }
 
     @Override
-    public TransactionLog saveTransactionLog(Configuration outer, TransactionLog transactionLog) {
-        return DSL.using(outer)
-                .transactionResult(nested -> {
-                    DSLContext ctx = DSL.using(nested);
+    public TransactionLog saveTransactionLog(Configuration txContext, TransactionLog transactionLog) {
+        return DSL.using(txContext)
+                .transactionResult(nestedTx -> {
+                    DSLContext ctx = DSL.using(nestedTx);
                     TransactionLogRecord transactionLogRecord = ctx.newRecord(TRANSACTION_LOG);
                     transactionLogRecord.setAmount(transactionLog.getAmount());
+                    transactionLogRecord.setBalance(transactionLog.getBalance());
                     transactionLogRecord.setTimeStamp(transactionLog.getTimeStamp());
-                    transactionLogRecord.setFromAccountNumber(transactionLog.getFromAccountNumber());
-                    //transactionLogRecord.setToAccountNumber(transactionLog.getToAccountNumber());
+                    transactionLogRecord.setAccountNumber(transactionLog.getAccountNumber());
                     transactionLogRecord.store();
 
                     return transactionLogRecord.map(transactionLogMapper);

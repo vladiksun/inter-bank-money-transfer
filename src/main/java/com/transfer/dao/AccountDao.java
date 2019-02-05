@@ -6,11 +6,19 @@ import org.jooq.Configuration;
 
 public interface AccountDao {
 
-    Account getAccountDetails(long accountId);
+    Account createAccount(Configuration txContext, Account account, long customerID);
+
+    Account createAccount(Account account, long customerID);
+
+    Account getAccountDetails(long accountNumber);
 
     Account getAccountDetails(Account account);
 
     void setAccountBalance(Account account);
 
-    void setAccountBalance(Configuration configuration, Account account);
+    void setAccountBalance(Configuration txContext, Account account);
+
+    Account softDeleteAccount(long accountNumber);
+
+    Account lockAccount(Configuration txContext, long accountNumber);
 }

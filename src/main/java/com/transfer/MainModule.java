@@ -1,10 +1,15 @@
 package com.transfer;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Singleton;
 import com.google.inject.name.Names;
+import com.transfer.dao.CustomerDao;
+import com.transfer.dao.impl.CustomerDaoImpl;
 import com.transfer.datasource.DataSources;
 import com.transfer.service.ServiceModule;
 import com.transfer.spark.ControllerModule;
+import com.transfer.utils.AppProperties;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -18,7 +23,10 @@ public class MainModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        Names.bindProperties(binder(), loadApplicationProperties());
+        Properties properties = loadApplicationProperties();
+
+        Names.bindProperties(binder(), properties);
+        bind(AppProperties.class).toInstance(new AppProperties(properties));
 
         install(new DataSources());
         install(new ServiceModule());

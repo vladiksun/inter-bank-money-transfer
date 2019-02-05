@@ -3,10 +3,8 @@ package com.testsupport;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.transfer.MainModule;
-import com.transfer.service.LifecycleManager;
+import com.transfer.utils.LifecycleManager;
 import org.junit.rules.ExternalResource;
-
-import java.lang.reflect.Type;
 
 /**
  * Container for integration tests.

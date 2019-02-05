@@ -11,14 +11,14 @@ public class UserTransaction implements Serializable {
 
     private BigDecimal amount;
 
-    private Long fromAccountId;
+    private Long fromAccountNumber;
 
-    private Long toAccountId;
+    private Long toAccountNumber;
 
     public UserTransaction(BigDecimal amount, Long fromAccountId, Long toAccountId) {
         this.amount = amount;
-        this.fromAccountId = fromAccountId;
-        this.toAccountId = toAccountId;
+        this.fromAccountNumber = fromAccountId;
+        this.toAccountNumber = toAccountId;
     }
 
     public BigDecimal getAmount() {
@@ -29,20 +29,20 @@ public class UserTransaction implements Serializable {
         this.amount = amount;
     }
 
-    public Long getFromAccountId() {
-        return fromAccountId;
+    public Long getFromAccountNumber() {
+        return fromAccountNumber;
     }
 
-    public void setFromAccountId(Long fromAccountId) {
-        this.fromAccountId = fromAccountId;
+    public void setFromAccountNumber(Long fromAccountNumber) {
+        this.fromAccountNumber = fromAccountNumber;
     }
 
-    public Long getToAccountId() {
-        return toAccountId;
+    public Long getToAccountNumber() {
+        return toAccountNumber;
     }
 
-    public void setToAccountId(Long toAccountId) {
-        this.toAccountId = toAccountId;
+    public void setToAccountNumber(Long toAccountNumber) {
+        this.toAccountNumber = toAccountNumber;
     }
 
     @Override
@@ -51,12 +51,12 @@ public class UserTransaction implements Serializable {
         if (!(o instanceof UserTransaction)) return false;
         UserTransaction that = (UserTransaction) o;
         return Objects.equal(amount, that.amount) &&
-                Objects.equal(fromAccountId, that.fromAccountId) &&
-                Objects.equal(toAccountId, that.toAccountId);
+                Objects.equal(fromAccountNumber, that.fromAccountNumber) &&
+                Objects.equal(toAccountNumber, that.toAccountNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(amount, fromAccountId, toAccountId);
+        return Objects.hashCode(amount, fromAccountNumber, toAccountNumber);
     }
 }

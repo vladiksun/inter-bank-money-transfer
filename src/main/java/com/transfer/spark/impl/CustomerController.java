@@ -26,5 +26,10 @@ public class CustomerController implements SparkController {
             final Customer customerToCreate = fromJsonString(Customer.class, body);
             return customerService.createCustomer(customerToCreate);
         }, json());
+
+        get("/customers/:id", (req, res) -> {
+            String customerID = req.params(":id");
+            return customerService.getCustomerById(Long.valueOf(customerID));
+        }, json());
     }
 }

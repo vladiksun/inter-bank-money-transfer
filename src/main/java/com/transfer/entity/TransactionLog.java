@@ -15,30 +15,22 @@ public class TransactionLog implements Serializable {
     private static final long serialVersionUID = 211247371418598810L;
 
     private Long       txId;
-    private Long fromAccountNumber;
-    private Long toAccountNumber;
+    private Long accountNumber;
     private BigDecimal amount;
+    private BigDecimal balance;
     private Timestamp  timeStamp;
 
     public TransactionLog() {}
 
-    public TransactionLog(TransactionLog value) {
-        this.txId = value.txId;
-        this.fromAccountNumber = value.fromAccountNumber;
-        this.toAccountNumber = value.toAccountNumber;
-        this.amount = value.amount;
-        this.timeStamp = value.timeStamp;
-    }
-
     public TransactionLog(
-        Long       fromAccountNumber,
-        Long       toAccountNumber,
+        Long       accountNumber,
         BigDecimal amount,
+        BigDecimal balance,
         Timestamp  timeStamp
     ) {
-        this.fromAccountNumber = fromAccountNumber;
-        this.toAccountNumber = toAccountNumber;
+        this.accountNumber = accountNumber;
         this.amount = amount;
+        this.balance = balance;
         this.timeStamp = timeStamp;
     }
 
@@ -48,14 +40,6 @@ public class TransactionLog implements Serializable {
 
     public void setTxId(Long txId) {
         this.txId = txId;
-    }
-
-    public Long getFromAccountNumber() {
-        return this.fromAccountNumber;
-    }
-
-    public void setFromAccountNumber(Long fromAccountNumber) {
-        this.fromAccountNumber = fromAccountNumber;
     }
 
     public BigDecimal getAmount() {
@@ -74,21 +58,29 @@ public class TransactionLog implements Serializable {
         this.timeStamp = timeStamp;
     }
 
-    public Long getToAccountNumber() {
-        return toAccountNumber;
+    public Long getAccountNumber() {
+        return accountNumber;
     }
 
-    public void setToAccountNumber(Long toAccountNumber) {
-        this.toAccountNumber = toAccountNumber;
+    public void setAccountNumber(Long accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 
     @Override
     public String toString() {
         return "TransactionLog{" +
                 "txId=" + txId +
-                ", fromAccountNumber=" + fromAccountNumber +
-                ", toAccountNumber=" + toAccountNumber +
+                ", accountNumber=" + accountNumber +
                 ", amount=" + amount +
+                ", balance=" + balance +
                 ", timeStamp=" + timeStamp +
                 '}';
     }
@@ -99,14 +91,14 @@ public class TransactionLog implements Serializable {
         if (!(o instanceof TransactionLog)) return false;
         TransactionLog that = (TransactionLog) o;
         return Objects.equal(txId, that.txId) &&
-                Objects.equal(fromAccountNumber, that.fromAccountNumber) &&
-                Objects.equal(toAccountNumber, that.toAccountNumber) &&
+                Objects.equal(accountNumber, that.accountNumber) &&
                 Objects.equal(amount, that.amount) &&
+                Objects.equal(balance, that.balance) &&
                 Objects.equal(timeStamp, that.timeStamp);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(txId, fromAccountNumber, toAccountNumber, amount, timeStamp);
+        return Objects.hashCode(txId, accountNumber, amount, balance, timeStamp);
     }
 }

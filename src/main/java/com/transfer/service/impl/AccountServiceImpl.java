@@ -4,9 +4,15 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.transfer.dao.AccountDao;
 import com.transfer.entity.Account;
-import com.transfer.exception.AccountNotFoundException;
-import com.transfer.exception.ApplicationException;
+import com.transfer.entity.AccountType;
+import com.transfer.entity.Customer;
+import com.transfer.exception.*;
 import com.transfer.service.AccountService;
+import com.transfer.service.CustomerService;
+import org.apache.commons.lang.StringUtils;
+import org.jooq.Configuration;
+import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 
 import java.util.List;
 
@@ -14,30 +20,72 @@ import java.util.List;
 public class AccountServiceImpl implements AccountService {
 
     private final AccountDao accountDao;
+    private final Configuration configuration;
+    private final CustomerService customerService;
 
     @Inject
-    public AccountServiceImpl(AccountDao accountDao) {
+    public AccountServiceImpl(final AccountDao accountDao,
+                              final CustomerService customerService,
+                              final Configuration configuration) {
         this.accountDao = accountDao;
+        this.customerService = customerService;
+        this.configuration = configuration;
     }
 
     @Override
     public Account createAccount(Account accountToCreate, long customerId) throws ApplicationException {
+        validateAccountParameters(accountToCreate);
+
+        DSLContext ctx = DSL.using(configuration);
+
+        return ctx.transactionResult(txContext -> {
+            Customer customer = customerService.getCustomerById(customerId);
+
+            if (customer == null) {
+                throw new CustomerNotFoundException("Customer not found");
+            }
+
+            return accountDao.createAccount(txContext, accountToCreate, customerId);
+        });
+    }
+
+    private void validateAccountParameters(Account accountToCreate) throws ApplicationException {
+        if (accountToCreate == null) {
+            throw new InvalidParameterException("Account parameters are not set");
+        }
+
+        if (StringUtils.isBlank(accountToCreate.getCurrencyCode())) {
+            throw new InvalidParameterException("Currency code is empty");
+        }
+
+        if (!isAccountNumberValid(accountToCreate.getAccountNumber())) {
+            throw new InvalidParameterException("Account number is not valid");
+        }
+
+        if (!isAccountTypeValid(accountToCreate.getType())) {
+            throw new IllegalAccountTypeException("Account type is not valid");
+        }
+
+    }
+
+    private boolean isAccountTypeValid(String type) {
+        return AccountType.fromId(type) != null;
+    }
+
+    // just simple validation
+    private boolean isAccountNumberValid(long accountNumber) {
+        return accountNumber > 0;
+    }
+
+
+    @Override
+    public Account softDeleteAccount(long accountNumber) throws ApplicationException {
+        return accountDao.softDeleteAccount(accountNumber);
+    }
+
+    @Override
+    public Customer addCustomerToAccount(long customerId, long accountNumber) throws ApplicationException {
         return null;
-    }
-
-    @Override
-    public void removeAccount(long accountId) throws ApplicationException {
-
-    }
-
-    @Override
-    public void addCustomerToAccount(long customerId, long accountId) throws ApplicationException {
-
-    }
-
-    @Override
-    public void removeCustomerFromAccount(long customerId, long accountId) throws ApplicationException {
-
     }
 
     @Override
@@ -46,14 +94,14 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<Long> getCustomerIds(long accountId) throws ApplicationException {
+    public List<Customer> getCustomerIdsForAccount(long accountNumber) throws ApplicationException {
         return null;
     }
 
     @Override
-    public Account getAccountDetails(long accountId) throws ApplicationException {
-        Account account = accountDao.getAccountDetails(accountId);
-        validateAccount(account, accountId);
+    public Account getAccountDetails(long accountNumber) throws ApplicationException {
+        Account account = accountDao.getAccountDetails(accountNumber);
+        validateAccountExists(account, accountNumber);
         return account;
     }
 
@@ -63,7 +111,7 @@ public class AccountServiceImpl implements AccountService {
         accountDao.setAccountBalance(account);
     }
 
-    private void validateAccount(Account account, long accountID) throws AccountNotFoundException {
+    private void validateAccountExists(Account account, long accountID) throws AccountNotFoundException {
         if (account == null) {
             throw new AccountNotFoundException(String.format("Account with number = [ %d ] is not found", accountID));
         }

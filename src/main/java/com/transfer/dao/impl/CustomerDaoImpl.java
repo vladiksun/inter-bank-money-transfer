@@ -37,7 +37,19 @@ public class CustomerDaoImpl implements CustomerDao {
         customerRecord.setFirstName(customer.getFirstName());
         customerRecord.setLastName(customer.getLastName());
         customerRecord.setEmail(customer.getEmail());
+        customerRecord.setSoftDeleted(null);
         customerRecord.store();
         return customerRecord.map(customerMapper);
+    }
+
+    @Override
+    public Customer getCustomerById(long customerId) {
+        DSLContext ctx = DSL.using(configuration);
+
+        return ctx.select()
+                .from(CUSTOMER)
+                .where(CUSTOMER.CUSTOMER_ID.eq(customerId))
+                .fetchOne()
+                .map(customerMapper);
     }
 }

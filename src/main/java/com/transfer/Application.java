@@ -2,7 +2,7 @@ package com.transfer;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.transfer.service.LifecycleManager;
+import com.transfer.utils.LifecycleManager;
 import com.transfer.spark.SparkController;
 
 public class Application {

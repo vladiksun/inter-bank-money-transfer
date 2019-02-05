@@ -2,15 +2,18 @@ package com.transfer.service.impl;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import com.transfer.dao.AccountDao;
 import com.transfer.dao.TransactionLogDao;
 import com.transfer.entity.Account;
 import com.transfer.entity.TransactionDetails;
 import com.transfer.entity.TransactionLog;
 import com.transfer.entity.UserTransaction;
-import com.transfer.exception.*;
-import com.transfer.service.AccountService;
+import com.transfer.exception.ApplicationException;
+import com.transfer.exception.InsufficientFundsException;
+import com.transfer.exception.InvalidParameterException;
 import com.transfer.service.TransactionService;
+import com.transfer.utils.AppProperties;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.jooq.Configuration;
@@ -27,29 +30,24 @@ import java.util.List;
 public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionLogDao transactionLogDao;
-    private final AccountService accountService;
     private final Configuration configuration;
     private final AccountDao accountDao;
+    private final AppProperties appProperties;
 
     @Inject
     public TransactionServiceImpl(final TransactionLogDao transactionLogDao,
-                                  final AccountService accountService,
                                   final Configuration configuration,
-                                  final AccountDao accountDao) {
+                                  final AccountDao accountDao,
+                                  final AppProperties appProperties) {
         this.transactionLogDao = transactionLogDao;
-        this.accountService = accountService;
         this.configuration = configuration;
         this.accountDao = accountDao;
+        this.appProperties = appProperties;
     }
 
     @Override
-    public List<TransactionDetails> getAccountTransactions(Date startDate, Date endDate, String accountId)
+    public List<TransactionDetails> getAccountTransactions(Date startDate, Date endDate, String accountNumber)
             throws ApplicationException {
-        return null;
-    }
-
-    @Override
-    public TransactionDetails getTransactionDetails(long transactionID) throws ApplicationException {
         return null;
     }
 
@@ -81,8 +79,8 @@ public class TransactionServiceImpl implements TransactionService {
 
         return ctx.transactionResult(configuration -> {
 
-            Account fromAccount = accountService.getAccountDetails(userTransaction.getFromAccountId());
-            Account toAccount = accountService.getAccountDetails(userTransaction.getToAccountId());
+            Account fromAccount = accountDao.lockAccount(configuration, userTransaction.getFromAccountNumber());
+            Account toAccount = accountDao.lockAccount(configuration, userTransaction.getToAccountNumber());
 
             CurrencyUnit fromCurrencyUnit = CurrencyUnit.of(fromAccount.getCurrencyCode());
             CurrencyUnit toCurrencyUnit = CurrencyUnit.of(toAccount.getCurrencyCode());
@@ -91,12 +89,19 @@ public class TransactionServiceImpl implements TransactionService {
                 throw new InvalidParameterException("Fail to transfer fund, the source and destination account are of different currency");
             }
 
+            RoundingMode appRoundingMode = appProperties.getAppRoundingMode();
+
             Money transactionMoney = Money.of(fromCurrencyUnit, userTransaction.getAmount()
-                    .setScale(fromCurrencyUnit.getDecimalPlaces(), RoundingMode.HALF_EVEN));
+                    .setScale(fromCurrencyUnit.getDecimalPlaces(), appRoundingMode));
+
+            if (transactionMoney.isNegativeOrZero()) {
+                throw new InvalidParameterException("Nothing to transfer");
+            }
+
             Money fromAccountMoney = Money.of(fromCurrencyUnit, fromAccount.getBalance()
-                    .setScale(fromCurrencyUnit.getDecimalPlaces(), RoundingMode.HALF_EVEN));
+                    .setScale(fromCurrencyUnit.getDecimalPlaces(), appRoundingMode));
             Money toAccountMoney = Money.of(toCurrencyUnit, toAccount.getBalance()
-                    .setScale(toCurrencyUnit.getDecimalPlaces(), RoundingMode.HALF_EVEN));
+                    .setScale(toCurrencyUnit.getDecimalPlaces(), appRoundingMode));
 
             Money fromAccountLeftOver = fromAccountMoney.minus(transactionMoney);
 
@@ -111,11 +116,11 @@ public class TransactionServiceImpl implements TransactionService {
             accountDao.setAccountBalance(configuration, toAccount);
 
             TransactionLog transactionLog = new TransactionLog(fromAccount.getAccountNumber(),
-                    toAccount.getAccountNumber(),
-                    userTransaction.getAmount(),
-                    new Timestamp(System.currentTimeMillis()));
+                                                                transactionMoney.getAmount(),
+                                                                fromAccountMoney.getAmount(),
+                                                                new Timestamp(System.currentTimeMillis()));
 
-            transactionLog = transactionLogDao.saveTransactionLog(transactionLog);
+            transactionLog = transactionLogDao.saveTransactionLog(configuration, transactionLog);
 
             return transactionLog;
         });
@@ -134,12 +139,16 @@ public class TransactionServiceImpl implements TransactionService {
             throw new InvalidParameterException("Transfer amount cannot be 0.00");
         }
 
-        if (userTransaction.getFromAccountId() == null) {
+        if (userTransaction.getFromAccountNumber() == null) {
             throw new InvalidParameterException("Source account is not specified");
         }
 
-        if (userTransaction.getToAccountId() == null) {
+        if (userTransaction.getToAccountNumber() == null) {
             throw new InvalidParameterException("Target account is not specified");
+        }
+
+        if (userTransaction.getToAccountNumber().equals(userTransaction.getFromAccountNumber())) {
+            throw new InvalidParameterException("Source and target accounts are same");
         }
     }
 }

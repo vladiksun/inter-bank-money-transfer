@@ -11,13 +11,16 @@ import java.util.List;
 
 public interface TransactionService {
 
-    // returns an ArrayList of TxDetails objects
-    // that correspond to the txs for the specified
-    // account
-    List<TransactionDetails> getAccountTransactions(Date startDate, Date endDate, String accountId)
+    /**
+     * Get account transactions
+     * @param startDate start from date
+     * @param endDate start from date
+     * @return <code>List<TransactionDetails></code> transaction logs within dates
+     * @throws ApplicationException
+     */
+    List<TransactionDetails> getAccountTransactions(Date startDate, Date endDate, String accountNumber)
                                                                                     throws ApplicationException;
 
-    TransactionDetails getTransactionDetails(long transactionID) throws ApplicationException;
 
     void withdraw(BigDecimal amount, String description, long accountId) throws ApplicationException;
 

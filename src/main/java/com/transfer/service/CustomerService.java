@@ -6,23 +6,46 @@ import com.transfer.exception.ApplicationException;
 import java.util.List;
 
 public interface CustomerService {
-    //TODO: javadoc
-    // makes a new customer and enters it into db,
-    Customer createCustomer(Customer customer) throws ApplicationException;
-    //TODO: javadoc
-    // removes customer from db
-    void removeCustomer(long customerId) throws ApplicationException;
-    //TODO: javadoc
-    // returns the details of a customer
-    Customer getCustomerById(long customerId) throws ApplicationException;
-    //TODO: javadoc
-    List<Customer> getCustomersByAccount(long accountId) throws ApplicationException;
 
-    //TODO: javadoc
-    // returns an ArrayList of CustomerDetails objects
-    // that correspond to the customers for the specified
-    // last name; if now customers are found the ArrayList
-    // is empty
-    List<Customer> getCustomersByLastName(String lastName) throws ApplicationException;
+    /**
+     * Creates customer
+     * @param customer
+     * @return created customer
+     * @throws ApplicationException
+     */
+    Customer createCustomer(Customer customer) throws ApplicationException;
+
+    /**
+     * Soft deletes customer
+     * @param customerId
+     * @return customer
+     * @throws ApplicationException
+     */
+    Customer softDeleteCustomer(long customerId) throws ApplicationException;
+
+    /**
+     * Get customerById
+     * @param customerId
+     * @return customer
+     * @throws ApplicationException
+     */
+    Customer getCustomerById(long customerId) throws ApplicationException;
+
+    /**
+     * Get customers of account
+     * @param accountNumber
+     * @return <code>List<Customer></code>
+     * @throws ApplicationException
+     */
+    List<Customer> getCustomersByAccount(long accountNumber) throws ApplicationException;
+
+    /**
+     * Get customer by the last and first name
+     * @param firstName
+     * @param lastName
+     * @return <code>List<Customer></code>
+     * @throws ApplicationException
+     */
+    Customer getCustomersByFirstAndLastName(String firstName, String lastName) throws ApplicationException;
 
 }

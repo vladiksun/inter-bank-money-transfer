@@ -6,6 +6,7 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.jolbox.bonecp.BoneCPDataSource;
 import org.jooq.Configuration;
+import org.jooq.conf.Settings;
 import org.jooq.impl.DefaultConfiguration;
 
 public class DataSources extends AbstractModule {
@@ -35,7 +36,11 @@ public class DataSources extends AbstractModule {
             throw new RuntimeException(e);
         }
 
-        Configuration configuration = new DefaultConfiguration().set(dataSource);
+        Settings settings = new Settings()
+                .withReturnAllOnUpdatableRecord(false); // Defaults to false
+        Configuration configuration = new DefaultConfiguration()
+                .set(dataSource)
+                .set(settings);
 
         return configuration;
     }

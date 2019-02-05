@@ -28,22 +28,22 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void removeCustomer(long customerId) throws ApplicationException {
-
+    public Customer softDeleteCustomer(long customerId) throws ApplicationException {
+        return null;
     }
 
     @Override
     public Customer getCustomerById(long customerId) throws ApplicationException {
+        return customerDao.getCustomerById(customerId);
+    }
+
+    @Override
+    public List<Customer> getCustomersByAccount(long accountNumber) throws ApplicationException {
         return null;
     }
 
     @Override
-    public List<Customer> getCustomersByAccount(long accountId) throws ApplicationException {
-        return null;
-    }
-
-    @Override
-    public List<Customer> getCustomersByLastName(String lastName) throws ApplicationException {
+    public Customer getCustomersByFirstAndLastName(String firstName, String lastName) throws ApplicationException {
         return null;
     }
 
