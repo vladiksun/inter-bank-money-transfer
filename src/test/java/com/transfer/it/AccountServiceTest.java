@@ -40,7 +40,7 @@ public class AccountServiceTest {
         Customer savedCustomer = customerService.createCustomer(customer);
 
         Account account = new Account();
-        account.setAccountNumber(999L);
+        account.setAccountNumber("999");
         account.setType(AccountType.CHECKING.toString());
         account.setDescription("Just test account");
         account.setCurrencyCode(CurrencyUnit.USD.toString());
@@ -61,7 +61,7 @@ public class AccountServiceTest {
         Customer savedCustomer = customerService.createCustomer(customer);
 
         Account account = new Account();
-        account.setAccountNumber(999L);
+        account.setAccountNumber("999");
         account.setType("UNKNOWN");
         account.setDescription("Just test account");
         account.setCurrencyCode(CurrencyUnit.USD.toString());

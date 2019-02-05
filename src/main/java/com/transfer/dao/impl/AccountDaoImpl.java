@@ -63,7 +63,7 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
-    public Account getAccountDetails(long accountNumber) {
+    public Account getAccountDetails(String accountNumber) {
         DSLContext ctx = DSL.using(configuration);
 
         return ctx.select()
@@ -96,8 +96,10 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
-    public Account softDeleteAccount(long accountNumber) {
+    public Account softDeleteAccount(String accountNumber) {
         DSLContext ctx = DSL.using(configuration);
+
+        //TODO remove links
 
         return ctx.update(ACCOUNT)
                 .set(ACCOUNT.SOFT_DELETED, "TRUE")
@@ -108,7 +110,7 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
-    public Account lockAccount(Configuration txContext, long accountNumber) {
+    public Account lockAccount(Configuration txContext, String accountNumber) {
         return DSL.using(txContext)
                 .transactionResult(nestedTx ->
                         DSL.using(nestedTx)

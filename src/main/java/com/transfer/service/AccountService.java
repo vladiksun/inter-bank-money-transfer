@@ -23,7 +23,7 @@ public interface AccountService {
      * @return removed account
      * @throws ApplicationException
      */
-    Account softDeleteAccount(long accountNumber) throws ApplicationException;
+    Account softDeleteAccount(String accountNumber) throws ApplicationException;
 
     /**
      * Add customer to account
@@ -32,7 +32,7 @@ public interface AccountService {
      * @return customer
      * @throws ApplicationException
      */
-    Customer addCustomerToAccount(long customerId, long accountNumber) throws ApplicationException;
+    Customer addCustomerToAccount(long customerId, String accountNumber) throws ApplicationException;
 
     /**
      * Get list of customers accounts
@@ -48,7 +48,7 @@ public interface AccountService {
      * @return <code>List<Customer></code> of customers
      * @throws ApplicationException
      */
-    List<Customer> getCustomerIdsForAccount(long accountNumber) throws ApplicationException;
+    List<Customer> getCustomerIdsForAccount(String accountNumber) throws ApplicationException;
 
     /**
      * Get account details
@@ -56,7 +56,7 @@ public interface AccountService {
      * @return account
      * @throws ApplicationException
      */
-    Account getAccountDetails(long accountNumber) throws ApplicationException;
+    Account getAccountDetails(String accountNumber) throws ApplicationException;
 
     /**
      * Set account balance

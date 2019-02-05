@@ -24,7 +24,7 @@ public interface CustomerService {
     Customer softDeleteCustomer(long customerId) throws ApplicationException;
 
     /**
-     * Get customerById
+     * Get customer by id
      * @param customerId
      * @return customer
      * @throws ApplicationException

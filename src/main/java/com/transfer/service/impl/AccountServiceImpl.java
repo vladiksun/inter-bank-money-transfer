@@ -73,33 +73,33 @@ public class AccountServiceImpl implements AccountService {
     }
 
     // just simple validation
-    private boolean isAccountNumberValid(long accountNumber) {
-        return accountNumber > 0;
+    private boolean isAccountNumberValid(String accountNumber) {
+        return !StringUtils.isBlank(accountNumber);
     }
 
 
     @Override
-    public Account softDeleteAccount(long accountNumber) throws ApplicationException {
+    public Account softDeleteAccount(String accountNumber) throws ApplicationException {
         return accountDao.softDeleteAccount(accountNumber);
     }
 
     @Override
-    public Customer addCustomerToAccount(long customerId, long accountNumber) throws ApplicationException {
-        return null;
+    public Customer addCustomerToAccount(long customerId, String accountNumber) throws ApplicationException {
+        throw new RuntimeException("Operation is not supported yet.");
     }
 
     @Override
     public List<Account> getAccountsOfCustomer(long customerId) throws ApplicationException {
-        return null;
+        throw new RuntimeException("Operation is not supported yet.");
     }
 
     @Override
-    public List<Customer> getCustomerIdsForAccount(long accountNumber) throws ApplicationException {
-        return null;
+    public List<Customer> getCustomerIdsForAccount(String accountNumber) throws ApplicationException {
+        throw new RuntimeException("Operation is not supported yet.");
     }
 
     @Override
-    public Account getAccountDetails(long accountNumber) throws ApplicationException {
+    public Account getAccountDetails(String accountNumber) throws ApplicationException {
         Account account = accountDao.getAccountDetails(accountNumber);
         validateAccountExists(account, accountNumber);
         return account;
@@ -111,9 +111,9 @@ public class AccountServiceImpl implements AccountService {
         accountDao.setAccountBalance(account);
     }
 
-    private void validateAccountExists(Account account, long accountID) throws AccountNotFoundException {
+    private void validateAccountExists(Account account, String accountNumber) throws AccountNotFoundException {
         if (account == null) {
-            throw new AccountNotFoundException(String.format("Account with number = [ %d ] is not found", accountID));
+            throw new AccountNotFoundException(String.format("Account with number = [ %d ] is not found", accountNumber));
         }
     }
 }

@@ -9,7 +9,7 @@ public class Account implements Serializable {
 
     private static final long serialVersionUID = -5300324823123920796L;
 
-    private Long accountNumber;
+    private String accountNumber;
     private String     type;
     private String     description;
     private BigDecimal balance;
@@ -26,11 +26,11 @@ public class Account implements Serializable {
     }
 
     public Account(
-        Long       accountNumber,
+        String     accountNumber,
         String     type,
         String     description,
         BigDecimal balance,
-        String currencyCode
+        String     currencyCode
     ) {
         this.accountNumber = accountNumber;
         this.type = type;
@@ -39,11 +39,11 @@ public class Account implements Serializable {
         this.currencyCode = currencyCode;
     }
 
-    public Long getAccountNumber() {
+    public String getAccountNumber() {
         return this.accountNumber;
     }
 
-    public void setAccountNumber(Long accountNumber) {
+    public void setAccountNumber(String accountNumber) {
         this.accountNumber = accountNumber;
     }
 

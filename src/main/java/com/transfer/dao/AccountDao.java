@@ -10,7 +10,7 @@ public interface AccountDao {
 
     Account createAccount(Account account, long customerID);
 
-    Account getAccountDetails(long accountNumber);
+    Account getAccountDetails(String accountNumber);
 
     Account getAccountDetails(Account account);
 
@@ -18,7 +18,7 @@ public interface AccountDao {
 
     void setAccountBalance(Configuration txContext, Account account);
 
-    Account softDeleteAccount(long accountNumber);
+    Account softDeleteAccount(String accountNumber);
 
-    Account lockAccount(Configuration txContext, long accountNumber);
+    Account lockAccount(Configuration txContext, String accountNumber);
 }

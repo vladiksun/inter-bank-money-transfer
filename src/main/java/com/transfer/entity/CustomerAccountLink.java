@@ -14,21 +14,21 @@ public class CustomerAccountLink implements Serializable {
     private static final long serialVersionUID = 528322462;
 
     private Long customerId;
-    private Long accountId;
+    private String accountNumber;
 
     public CustomerAccountLink() {}
 
     public CustomerAccountLink(CustomerAccountLink value) {
         this.customerId = value.customerId;
-        this.accountId = value.accountId;
+        this.accountNumber = value.accountNumber;
     }
 
     public CustomerAccountLink(
         Long customerId,
-        Long accountId
+        String accountNumber
     ) {
         this.customerId = customerId;
-        this.accountId = accountId;
+        this.accountNumber = accountNumber;
     }
 
     public Long getCustomerId() {
@@ -39,12 +39,12 @@ public class CustomerAccountLink implements Serializable {
         this.customerId = customerId;
     }
 
-    public Long getAccountId() {
-        return this.accountId;
+    public String getAccountNumber() {
+        return this.accountNumber;
     }
 
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class CustomerAccountLink implements Serializable {
         StringBuilder sb = new StringBuilder("CustomerAccountLink (");
 
         sb.append(customerId);
-        sb.append(", ").append(accountId);
+        sb.append(", ").append(accountNumber);
 
         sb.append(")");
         return sb.toString();
@@ -64,11 +64,11 @@ public class CustomerAccountLink implements Serializable {
         if (!(o instanceof CustomerAccountLink)) return false;
         CustomerAccountLink that = (CustomerAccountLink) o;
         return Objects.equal(customerId, that.customerId) &&
-                Objects.equal(accountId, that.accountId);
+                Objects.equal(accountNumber, that.accountNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(customerId, accountId);
+        return Objects.hashCode(customerId, accountNumber);
     }
 }

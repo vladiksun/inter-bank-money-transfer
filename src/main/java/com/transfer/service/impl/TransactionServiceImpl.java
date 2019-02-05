@@ -2,11 +2,9 @@ package com.transfer.service.impl;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import com.transfer.dao.AccountDao;
 import com.transfer.dao.TransactionLogDao;
 import com.transfer.entity.Account;
-import com.transfer.entity.TransactionDetails;
 import com.transfer.entity.TransactionLog;
 import com.transfer.entity.UserTransaction;
 import com.transfer.exception.ApplicationException;
@@ -46,29 +44,19 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<TransactionDetails> getAccountTransactions(Date startDate, Date endDate, String accountNumber)
+    public List<TransactionLog> getAccountTransactions(Date startDate, Date endDate, String accountNumber)
             throws ApplicationException {
-        return null;
+        throw new RuntimeException("Operation is not supported yet.");
     }
 
     @Override
-    public void withdraw(BigDecimal amount, String description, long accountId) throws ApplicationException {
-
+    public Account withdraw(BigDecimal amount, String description, long accountNumber) throws ApplicationException {
+        throw new RuntimeException("Operation is not supported yet.");
     }
 
     @Override
-    public void deposit(BigDecimal amount, String description, long accountId) throws ApplicationException {
-
-    }
-
-    @Override
-    public void makeCharge(BigDecimal amount, String description, long accountId) throws ApplicationException {
-
-    }
-
-    @Override
-    public void makePayment(BigDecimal amount, String description, long accountId) throws ApplicationException {
-
+    public Account deposit(BigDecimal amount, String description, long accountNumber) throws ApplicationException {
+        throw new RuntimeException("Operation is not supported yet.");
     }
 
     @Override

@@ -54,14 +54,14 @@ public class TransactionServiceTest {
         Customer savedCustomer = customerService.createCustomer(customer);
 
         Account account1 = new Account();
-        account1.setAccountNumber(998L);
+        account1.setAccountNumber("998");
         account1.setType(AccountType.CHECKING.toString());
         account1.setDescription("Just test account");
         account1.setCurrencyCode(CurrencyUnit.USD.toString());
         account1.setBalance(new BigDecimal(500000));
 
         Account account2 = new Account();
-        account2.setAccountNumber(999L);
+        account2.setAccountNumber("999");
         account2.setType(AccountType.SAVINGS.toString());
         account2.setDescription("Just test account");
         account2.setCurrencyCode(CurrencyUnit.USD.toString());
@@ -90,14 +90,14 @@ public class TransactionServiceTest {
         Customer savedCustomer = customerService.createCustomer(customer);
 
         Account account1 = new Account();
-        account1.setAccountNumber(898L);
+        account1.setAccountNumber("898");
         account1.setType(AccountType.CHECKING.toString());
         account1.setDescription("Just test account");
         account1.setCurrencyCode(CurrencyUnit.USD.toString());
         account1.setBalance(new BigDecimal(40000));
 
         Account account2 = new Account();
-        account2.setAccountNumber(899L);
+        account2.setAccountNumber("899");
         account2.setType(AccountType.SAVINGS.toString());
         account2.setDescription("Just test account");
         account2.setCurrencyCode(CurrencyUnit.USD.toString());
@@ -122,14 +122,14 @@ public class TransactionServiceTest {
         Customer savedCustomer = customerService.createCustomer(customer);
 
         Account account1 = new Account();
-        account1.setAccountNumber(798L);
+        account1.setAccountNumber("798");
         account1.setType(AccountType.CHECKING.toString());
         account1.setDescription("Just test account");
         account1.setCurrencyCode(CurrencyUnit.USD.toString());
         account1.setBalance(new BigDecimal(40000));
 
         Account account2 = new Account();
-        account2.setAccountNumber(799L);
+        account2.setAccountNumber("799");
         account2.setType(AccountType.SAVINGS.toString());
         account2.setDescription("Just test account");
         account2.setCurrencyCode(CurrencyUnit.JPY.toString());
@@ -154,14 +154,14 @@ public class TransactionServiceTest {
         Customer savedCustomer = customerService.createCustomer(customer);
 
         Account account1 = new Account();
-        account1.setAccountNumber(698L);
+        account1.setAccountNumber("698");
         account1.setType(AccountType.CHECKING.toString());
         account1.setDescription("Just test account");
         account1.setCurrencyCode(CurrencyUnit.USD.toString());
         account1.setBalance(new BigDecimal(40000));
 
         Account account2 = new Account();
-        account2.setAccountNumber(699L);
+        account2.setAccountNumber("699");
         account2.setType(AccountType.SAVINGS.toString());
         account2.setDescription("Just test account");
         account2.setCurrencyCode(CurrencyUnit.USD.toString());

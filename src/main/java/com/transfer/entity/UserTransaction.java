@@ -11,11 +11,11 @@ public class UserTransaction implements Serializable {
 
     private BigDecimal amount;
 
-    private Long fromAccountNumber;
+    private String fromAccountNumber;
 
-    private Long toAccountNumber;
+    private String toAccountNumber;
 
-    public UserTransaction(BigDecimal amount, Long fromAccountId, Long toAccountId) {
+    public UserTransaction(BigDecimal amount, String fromAccountId, String toAccountId) {
         this.amount = amount;
         this.fromAccountNumber = fromAccountId;
         this.toAccountNumber = toAccountId;
@@ -29,19 +29,19 @@ public class UserTransaction implements Serializable {
         this.amount = amount;
     }
 
-    public Long getFromAccountNumber() {
+    public String getFromAccountNumber() {
         return fromAccountNumber;
     }
 
-    public void setFromAccountNumber(Long fromAccountNumber) {
+    public void setFromAccountNumber(String fromAccountNumber) {
         this.fromAccountNumber = fromAccountNumber;
     }
 
-    public Long getToAccountNumber() {
+    public String getToAccountNumber() {
         return toAccountNumber;
     }
 
-    public void setToAccountNumber(Long toAccountNumber) {
+    public void setToAccountNumber(String toAccountNumber) {
         this.toAccountNumber = toAccountNumber;
     }
 

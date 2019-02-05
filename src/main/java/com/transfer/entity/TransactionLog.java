@@ -15,7 +15,7 @@ public class TransactionLog implements Serializable {
     private static final long serialVersionUID = 211247371418598810L;
 
     private Long       txId;
-    private Long accountNumber;
+    private String     accountNumber;
     private BigDecimal amount;
     private BigDecimal balance;
     private Timestamp  timeStamp;
@@ -23,7 +23,7 @@ public class TransactionLog implements Serializable {
     public TransactionLog() {}
 
     public TransactionLog(
-        Long       accountNumber,
+        String     accountNumber,
         BigDecimal amount,
         BigDecimal balance,
         Timestamp  timeStamp
@@ -58,11 +58,11 @@ public class TransactionLog implements Serializable {
         this.timeStamp = timeStamp;
     }
 
-    public Long getAccountNumber() {
+    public String getAccountNumber() {
         return accountNumber;
     }
 
-    public void setAccountNumber(Long accountNumber) {
+    public void setAccountNumber(String accountNumber) {
         this.accountNumber = accountNumber;
     }
 
