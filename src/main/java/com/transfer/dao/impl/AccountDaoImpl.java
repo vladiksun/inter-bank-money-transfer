@@ -4,10 +4,14 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.transfer.dao.AccountDao;
 import com.transfer.entity.Account;
+import com.transfer.entity.Customer;
 import com.transfer.jooq.stubs.tables.records.AccountRecord;
 import com.transfer.jooq.stubs.tables.records.CustomerAccountLinkRecord;
 import org.jooq.*;
 import org.jooq.impl.DSL;
+
+import java.util.List;
+import java.util.Optional;
 
 import static com.transfer.jooq.stubs.Tables.ACCOUNT;
 import static com.transfer.jooq.stubs.Tables.CUSTOMER_ACCOUNT_LINK;
@@ -18,15 +22,12 @@ public class AccountDaoImpl implements AccountDao {
 
     private final Configuration configuration;
 
-    private RecordMapper<Record, Account> accountMapper = record -> {
-        AccountRecord accountRecord = (AccountRecord) record;
-
-        return new Account(accountRecord.getAccountNumber(),
-                            accountRecord.getType(),
-                            accountRecord.getDescription(),
-                            accountRecord.getBalance(),
-                            accountRecord.getCurrencyCode());
-    };
+    private RecordMapper<Record, Account> accountMapper = record ->
+            new Account(record.get(ACCOUNT.ACCOUNT_NUMBER),
+                        record.get(ACCOUNT.TYPE),
+                        record.get(ACCOUNT.DESCRIPTION),
+                        record.get(ACCOUNT.BALANCE),
+                        record.get(ACCOUNT.CURRENCY_CODE));
 
     @Inject
     public AccountDaoImpl(final Configuration configuration) {
@@ -99,8 +100,6 @@ public class AccountDaoImpl implements AccountDao {
     public Account softDeleteAccount(String accountNumber) {
         DSLContext ctx = DSL.using(configuration);
 
-        //TODO remove links
-
         return ctx.update(ACCOUNT)
                 .set(ACCOUNT.SOFT_DELETED, "TRUE")
                 .where(ACCOUNT.ACCOUNT_NUMBER.eq(accountNumber))
@@ -121,5 +120,35 @@ public class AccountDaoImpl implements AccountDao {
                                     .forUpdate()
                                     .fetchOne()
                                     .map(accountMapper));
+    }
+
+    @Override
+    public void addCustomerToAccount(Customer customer, Account account) {
+        DSLContext ctx = DSL.using(configuration);
+
+        Record record = ctx.select()
+                .from(CUSTOMER_ACCOUNT_LINK)
+                .where(CUSTOMER_ACCOUNT_LINK.CUSTOMER_ID.eq(customer.getCustomerId())
+                        .and(CUSTOMER_ACCOUNT_LINK.ACCOUNT_NUMBER.eq(account.getAccountNumber())))
+                .fetchOne();
+
+        if (record == null) {
+            CustomerAccountLinkRecord customerAccountLinkRecord = ctx.newRecord(CUSTOMER_ACCOUNT_LINK);
+            customerAccountLinkRecord.setAccountNumber(account.getAccountNumber());
+            customerAccountLinkRecord.setCustomerId(customer.getCustomerId());
+            customerAccountLinkRecord.store();
+        }
+    }
+
+    @Override
+    public List<Account> getAccountsOfCustomer(Customer customer) {
+        DSLContext ctx = DSL.using(configuration);
+
+        return ctx.select(ACCOUNT.fields())
+                .from(ACCOUNT)
+                .join(CUSTOMER_ACCOUNT_LINK)
+                .on(CUSTOMER_ACCOUNT_LINK.ACCOUNT_NUMBER.eq(ACCOUNT.ACCOUNT_NUMBER)
+                        .and(CUSTOMER_ACCOUNT_LINK.CUSTOMER_ID.eq(customer.getCustomerId())))
+                .fetch().map(accountMapper);
     }
 }

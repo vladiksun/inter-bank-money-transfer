@@ -48,7 +48,7 @@ public interface AccountService {
      * @return <code>List<Customer></code> of customers
      * @throws ApplicationException
      */
-    List<Customer> getCustomerIdsForAccount(String accountNumber) throws ApplicationException;
+    List<Customer> getCustomersOfAccount(String accountNumber) throws ApplicationException;
 
     /**
      * Get account details

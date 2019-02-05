@@ -34,6 +34,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account createAccount(Account accountToCreate, long customerId) throws ApplicationException {
+
         validateAccountParameters(accountToCreate);
 
         DSLContext ctx = DSL.using(configuration);
@@ -79,16 +80,26 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Customer addCustomerToAccount(long customerId, String accountNumber) throws ApplicationException {
-        throw new RuntimeException("Operation is not supported yet.");
+        Customer customer = customerService.getCustomerById(customerId);
+        Account account = getAccountDetails(accountNumber);
+
+        Validator.validateCustomerExists(customer, customerId);
+
+        accountDao.addCustomerToAccount(customer, account);
+
+        return customer;
     }
 
     @Override
     public List<Account> getAccountsOfCustomer(long customerId) throws ApplicationException {
-        throw new RuntimeException("Operation is not supported yet.");
+        Customer customer = customerService.getCustomerById(customerId);
+        Validator.validateCustomerExists(customer, customerId);
+
+        return accountDao.getAccountsOfCustomer(customer);
     }
 
     @Override
-    public List<Customer> getCustomerIdsForAccount(String accountNumber) throws ApplicationException {
+    public List<Customer> getCustomersOfAccount(String accountNumber) throws ApplicationException {
         throw new RuntimeException("Operation is not supported yet.");
     }
 
