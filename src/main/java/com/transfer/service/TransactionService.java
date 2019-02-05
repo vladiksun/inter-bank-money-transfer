@@ -26,20 +26,20 @@ public interface TransactionService {
      * Withdraw funds from the account
      * @param amount amount of money to withdraw
      * @param description description
-     * @return updated account details
+     * @return transaction log
      * @throws ApplicationException
      */
-    Account withdraw(BigDecimal amount, @Nullable String description, long accountNumber) throws ApplicationException;
+    TransactionLog withdraw(BigDecimal amount, @Nullable String description, String accountNumber) throws ApplicationException;
 
     /**
      * Deposit funds to the account
      * @param amount amount of money to withdraw
      * @param description description
      * @param accountNumber account number
-     * @return updated account details
+     * @return transaction log
      * @throws ApplicationException
      */
-    Account deposit(BigDecimal amount, String description, long accountNumber) throws ApplicationException;
+    TransactionLog deposit(BigDecimal amount, String description, String accountNumber) throws ApplicationException;
 
     /**
      * Transfer funds from one account to another

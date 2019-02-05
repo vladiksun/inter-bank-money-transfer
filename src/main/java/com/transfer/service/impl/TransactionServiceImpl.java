@@ -10,6 +10,7 @@ import com.transfer.entity.UserTransaction;
 import com.transfer.exception.ApplicationException;
 import com.transfer.exception.InsufficientFundsException;
 import com.transfer.exception.InvalidParameterException;
+import com.transfer.service.AccountService;
 import com.transfer.service.TransactionService;
 import com.transfer.utils.AppProperties;
 import org.joda.money.CurrencyUnit;
@@ -30,17 +31,20 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionLogDao transactionLogDao;
     private final Configuration configuration;
     private final AccountDao accountDao;
+    private final AccountService accountService;
     private final AppProperties appProperties;
 
     @Inject
     public TransactionServiceImpl(final TransactionLogDao transactionLogDao,
                                   final Configuration configuration,
                                   final AccountDao accountDao,
-                                  final AppProperties appProperties) {
+                                  final AppProperties appProperties,
+                                  final AccountService accountService) {
         this.transactionLogDao = transactionLogDao;
         this.configuration = configuration;
         this.accountDao = accountDao;
         this.appProperties = appProperties;
+        this.accountService = accountService;
     }
 
     @Override
@@ -50,13 +54,92 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Account withdraw(BigDecimal amount, String description, long accountNumber) throws ApplicationException {
-        throw new RuntimeException("Operation is not supported yet.");
+    public TransactionLog withdraw(BigDecimal amount, String description, String accountNumber) throws ApplicationException {
+        if (!Validator.isAccountNumberValid(accountNumber)) {
+            throw new InvalidParameterException("Account number is not valid");
+        }
+
+        DSLContext ctx = DSL.using(configuration);
+
+        return ctx.transactionResult(outerTx -> {
+
+            Account account = accountDao.lockAccount(outerTx, accountNumber);
+            Validator.validateAccountExists(account, accountNumber);
+
+            CurrencyUnit fromCurrencyUnit = CurrencyUnit.of(account.getCurrencyCode());
+            RoundingMode appRoundingMode = appProperties.getAppRoundingMode();
+
+            Money transactionMoney = Money.of(fromCurrencyUnit, amount
+                    .setScale(fromCurrencyUnit.getDecimalPlaces(), appRoundingMode));
+
+            if (transactionMoney.isNegativeOrZero()) {
+                throw new InvalidParameterException("Specify the sum to withdraw");
+            }
+
+            Money accountMoney = Money.of(fromCurrencyUnit, account.getBalance()
+                    .setScale(fromCurrencyUnit.getDecimalPlaces(), appRoundingMode));
+
+            Money accountLeftOver = accountMoney.minus(transactionMoney);
+
+            if (accountLeftOver.isNegative()) {
+                throw new InsufficientFundsException("Not enough funds.");
+            }
+
+            account.setBalance(accountLeftOver.getAmount());
+            accountDao.setAccountBalance(outerTx, account);
+
+            TransactionLog transactionLog = new TransactionLog(account.getAccountNumber(),
+                                                                transactionMoney.getAmount(),
+                                                                accountMoney.getAmount(),
+                                                                new Timestamp(System.currentTimeMillis()));
+
+            transactionLog = transactionLogDao.saveTransactionLog(configuration, transactionLog);
+
+            return transactionLog;
+        });
     }
 
     @Override
-    public Account deposit(BigDecimal amount, String description, long accountNumber) throws ApplicationException {
-        throw new RuntimeException("Operation is not supported yet.");
+    public TransactionLog deposit(BigDecimal amount, String description, String accountNumber) throws ApplicationException {
+        if (!Validator.isAccountNumberValid(accountNumber)) {
+            throw new InvalidParameterException("Account number is not valid");
+        }
+
+        DSLContext ctx = DSL.using(configuration);
+
+        return ctx.transactionResult(outerTx -> {
+
+            Account account = accountDao.lockAccount(outerTx, accountNumber);
+            Validator.validateAccountExists(account, accountNumber);
+
+            CurrencyUnit fromCurrencyUnit = CurrencyUnit.of(account.getCurrencyCode());
+            RoundingMode appRoundingMode = appProperties.getAppRoundingMode();
+
+            Money transactionMoney = Money.of(fromCurrencyUnit, amount
+                    .setScale(fromCurrencyUnit.getDecimalPlaces(), appRoundingMode));
+
+            if (transactionMoney.isNegativeOrZero()) {
+                throw new InvalidParameterException("Specify the sum to deposit");
+            }
+
+            Money accountMoney = Money.of(fromCurrencyUnit, account.getBalance()
+                    .setScale(fromCurrencyUnit.getDecimalPlaces(), appRoundingMode));
+
+            Money depositMoney = Money.of(fromCurrencyUnit, amount
+                    .setScale(fromCurrencyUnit.getDecimalPlaces(), appRoundingMode));
+
+            account.setBalance(accountMoney.plus(depositMoney).getAmount());
+            accountDao.setAccountBalance(outerTx, account);
+
+            TransactionLog transactionLog = new TransactionLog(account.getAccountNumber(),
+                    transactionMoney.getAmount(),
+                    accountMoney.getAmount(),
+                    new Timestamp(System.currentTimeMillis()));
+
+            transactionLog = transactionLogDao.saveTransactionLog(configuration, transactionLog);
+
+            return transactionLog;
+        });
     }
 
     @Override
@@ -69,6 +152,9 @@ public class TransactionServiceImpl implements TransactionService {
 
             Account fromAccount = accountDao.lockAccount(configuration, userTransaction.getFromAccountNumber());
             Account toAccount = accountDao.lockAccount(configuration, userTransaction.getToAccountNumber());
+
+            Validator.validateAccountExists(fromAccount, userTransaction.getFromAccountNumber());
+            Validator.validateAccountExists(toAccount, userTransaction.getToAccountNumber());
 
             CurrencyUnit fromCurrencyUnit = CurrencyUnit.of(fromAccount.getCurrencyCode());
             CurrencyUnit toCurrencyUnit = CurrencyUnit.of(toAccount.getCurrencyCode());

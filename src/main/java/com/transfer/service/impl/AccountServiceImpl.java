@@ -58,7 +58,7 @@ public class AccountServiceImpl implements AccountService {
             throw new InvalidParameterException("Currency code is empty");
         }
 
-        if (!isAccountNumberValid(accountToCreate.getAccountNumber())) {
+        if (!Validator.isAccountNumberValid(accountToCreate.getAccountNumber())) {
             throw new InvalidParameterException("Account number is not valid");
         }
 
@@ -71,12 +71,6 @@ public class AccountServiceImpl implements AccountService {
     private boolean isAccountTypeValid(String type) {
         return AccountType.fromId(type) != null;
     }
-
-    // just simple validation
-    private boolean isAccountNumberValid(String accountNumber) {
-        return !StringUtils.isBlank(accountNumber);
-    }
-
 
     @Override
     public Account softDeleteAccount(String accountNumber) throws ApplicationException {
@@ -101,7 +95,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account getAccountDetails(String accountNumber) throws ApplicationException {
         Account account = accountDao.getAccountDetails(accountNumber);
-        validateAccountExists(account, accountNumber);
+        Validator.validateAccountExists(account, accountNumber);
         return account;
     }
 
@@ -111,9 +105,4 @@ public class AccountServiceImpl implements AccountService {
         accountDao.setAccountBalance(account);
     }
 
-    private void validateAccountExists(Account account, String accountNumber) throws AccountNotFoundException {
-        if (account == null) {
-            throw new AccountNotFoundException(String.format("Account with number = [ %d ] is not found", accountNumber));
-        }
-    }
 }

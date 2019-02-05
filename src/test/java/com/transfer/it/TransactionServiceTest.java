@@ -70,15 +70,18 @@ public class TransactionServiceTest {
         account1 = accountService.createAccount(account1, savedCustomer.getCustomerId());
         account2 = accountService.createAccount(account2, savedCustomer.getCustomerId());
 
-        UserTransaction transaction = new UserTransaction(new BigDecimal(250000), account1.getAccountNumber(), account2.getAccountNumber());
+        UserTransaction transaction = new UserTransaction(new BigDecimal(250000), account1.getAccountNumber(),
+                account2.getAccountNumber());
 
         transactionService.transferFunds(transaction);
 
         account1 = accountService.getAccountDetails(account1.getAccountNumber());
         account2 = accountService.getAccountDetails(account2.getAccountNumber());
 
-        assertEquals(new BigDecimal(250000).setScale(appProperties.getAppCurrencyScale(), appProperties.getAppRoundingMode()), account1.getBalance());
-        assertEquals(new BigDecimal(750000).setScale(appProperties.getAppCurrencyScale(), appProperties.getAppRoundingMode()), account2.getBalance());
+        assertEquals(new BigDecimal(250000)
+                .setScale(appProperties.getAppCurrencyScale(), appProperties.getAppRoundingMode()), account1.getBalance());
+        assertEquals(new BigDecimal(750000)
+                .setScale(appProperties.getAppCurrencyScale(), appProperties.getAppRoundingMode()), account2.getBalance());
     }
 
     @Test
@@ -106,7 +109,8 @@ public class TransactionServiceTest {
         account1 = accountService.createAccount(account1, savedCustomer.getCustomerId());
         account2 = accountService.createAccount(account2, savedCustomer.getCustomerId());
 
-        UserTransaction transaction = new UserTransaction(new BigDecimal(50000), account1.getAccountNumber(), account2.getAccountNumber());
+        UserTransaction transaction = new UserTransaction(new BigDecimal(50000), account1.getAccountNumber(),
+                account2.getAccountNumber());
 
         assertThatThrownBy(() -> {
             transactionService.transferFunds(transaction);
@@ -154,14 +158,14 @@ public class TransactionServiceTest {
         Customer savedCustomer = customerService.createCustomer(customer);
 
         Account account1 = new Account();
-        account1.setAccountNumber("698");
+        account1.setAccountNumber("555");
         account1.setType(AccountType.CHECKING.toString());
         account1.setDescription("Just test account");
         account1.setCurrencyCode(CurrencyUnit.USD.toString());
         account1.setBalance(new BigDecimal(40000));
 
         Account account2 = new Account();
-        account2.setAccountNumber("699");
+        account2.setAccountNumber("554");
         account2.setType(AccountType.SAVINGS.toString());
         account2.setDescription("Just test account");
         account2.setCurrencyCode(CurrencyUnit.USD.toString());
@@ -175,5 +179,79 @@ public class TransactionServiceTest {
         catchThrowableOfType(() -> {
             transactionService.transferFunds(transaction);
         }, InvalidParameterException.class);
+    }
+
+    @Test
+    public void testWithdrawFunds() throws Exception {
+        Customer customer = new Customer();
+        customer.setFirstName("TEST_NAME_5");
+        customer.setLastName("TEST_LAST_NAME_5");
+
+        Customer savedCustomer = customerService.createCustomer(customer);
+
+        Account account = new Account();
+        account.setAccountNumber("698");
+        account.setType(AccountType.CHECKING.toString());
+        account.setDescription("Just test account");
+        account.setCurrencyCode(CurrencyUnit.USD.toString());
+        account.setBalance(new BigDecimal(40000));
+
+        accountService.createAccount(account, savedCustomer.getCustomerId());
+
+        transactionService.withdraw(new BigDecimal(5000), "Take some money...", "698");
+        account = accountService.getAccountDetails(account.getAccountNumber());
+
+        assertEquals(new BigDecimal(35000)
+                            .setScale(appProperties.getAppCurrencyScale(),
+                                      appProperties.getAppRoundingMode()),
+                account.getBalance());
+    }
+
+    @Test
+    public void testShouldFailIfNotSufficientFundsToWithdraw() throws Exception {
+        Customer customer = new Customer();
+        customer.setFirstName("TEST_NAME_6");
+        customer.setLastName("TEST_LAST_NAME_6");
+
+        Customer savedCustomer = customerService.createCustomer(customer);
+
+        Account account = new Account();
+        account.setAccountNumber("697");
+        account.setType(AccountType.CHECKING.toString());
+        account.setDescription("Just test account");
+        account.setCurrencyCode(CurrencyUnit.USD.toString());
+        account.setBalance(new BigDecimal(40000));
+
+        accountService.createAccount(account, savedCustomer.getCustomerId());
+
+        assertThatThrownBy(() -> {
+            transactionService.withdraw(new BigDecimal(40001), "Take some money...", "697");
+        }).hasCauseInstanceOf(InsufficientFundsException.class);
+    }
+
+    @Test
+    public void testDepositFunds() throws Exception {
+        Customer customer = new Customer();
+        customer.setFirstName("TEST_NAME_7");
+        customer.setLastName("TEST_LAST_NAME_8");
+
+        Customer savedCustomer = customerService.createCustomer(customer);
+
+        Account account = new Account();
+        account.setAccountNumber("688");
+        account.setType(AccountType.CHECKING.toString());
+        account.setDescription("Just test account");
+        account.setCurrencyCode(CurrencyUnit.USD.toString());
+        account.setBalance(new BigDecimal(40000));
+
+        accountService.createAccount(account, savedCustomer.getCustomerId());
+
+        transactionService.deposit(new BigDecimal(5000), "Take some money...", "688");
+        account = accountService.getAccountDetails(account.getAccountNumber());
+
+        assertEquals(new BigDecimal(45000)
+                        .setScale(appProperties.getAppCurrencyScale(),
+                                appProperties.getAppRoundingMode()),
+                account.getBalance());
     }
 }

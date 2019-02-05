@@ -50,9 +50,11 @@ public class TestContainer extends ExternalResource {
     protected void setupContext() {
         Injector injector = Guice.createInjector(new MainModule());
         this.injector = injector;
+
         injector.getInstance(LifecycleManager.class).onStart();
     }
 
     protected void cleanupContext() {
+        injector.getInstance(LifecycleManager.class).onShutdown();
     }
 }

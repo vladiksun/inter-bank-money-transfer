@@ -2,6 +2,7 @@ package com.transfer.utils;
 
 import com.google.common.base.Charsets;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import org.apache.commons.io.IOUtils;
 import org.h2.tools.Server;
@@ -17,6 +18,7 @@ import java.sql.SQLException;
 /**
  * Contains startup and shutdown application logic
  */
+@Singleton
 public class LifecycleManager {
 
     final private Logger logger = LoggerFactory.getLogger(LifecycleManager.class);
@@ -26,6 +28,7 @@ public class LifecycleManager {
     private final Configuration configuration;
     private String dbPort;
     private String dbShutDownURL;
+    private Server h2Server;
 
     @Inject
     public LifecycleManager(final Configuration configuration,
@@ -38,14 +41,14 @@ public class LifecycleManager {
 
     public void onStart() {
 
-        Server h2Server = startDB();
+        h2Server = startDB();
 
         /* creates DB schema and fills DB with demo data */
         loadInitScript();
 
         /* Stops any services that must be stopped gracefully */
         Runtime.getRuntime().addShutdownHook(new Thread(this::onShutdown));
-        Runtime.getRuntime().addShutdownHook(new Thread(h2Server::stop));
+
     }
 
     /* Starts H2 database server in TCP mode */
@@ -72,7 +75,7 @@ public class LifecycleManager {
         }
     }
 
-    private void onShutdown() {
-
+    public void onShutdown() {
+        h2Server.stop();
     }
 }
