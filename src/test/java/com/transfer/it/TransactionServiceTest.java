@@ -198,7 +198,7 @@ public class TransactionServiceTest {
 
         accountService.createAccount(account, savedCustomer.getCustomerId());
 
-        transactionService.withdraw(new BigDecimal(5000), "Take some money...", "698");
+        transactionService.withdraw(new BigDecimal(5000), "698");
         account = accountService.getAccountDetails(account.getAccountNumber());
 
         assertEquals(new BigDecimal(35000)
@@ -225,7 +225,7 @@ public class TransactionServiceTest {
         accountService.createAccount(account, savedCustomer.getCustomerId());
 
         assertThatThrownBy(() -> {
-            transactionService.withdraw(new BigDecimal(40001), "Take some money...", "697");
+            transactionService.withdraw(new BigDecimal(40001),  "697");
         }).hasCauseInstanceOf(InsufficientFundsException.class);
     }
 
@@ -246,7 +246,7 @@ public class TransactionServiceTest {
 
         accountService.createAccount(account, savedCustomer.getCustomerId());
 
-        transactionService.deposit(new BigDecimal(5000), "Take some money...", "688");
+        transactionService.deposit(new BigDecimal(5000), "688");
         account = accountService.getAccountDetails(account.getAccountNumber());
 
         assertEquals(new BigDecimal(45000)

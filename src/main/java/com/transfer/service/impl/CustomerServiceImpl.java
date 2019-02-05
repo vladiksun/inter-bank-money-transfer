@@ -3,9 +3,11 @@ package com.transfer.service.impl;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.transfer.dao.CustomerDao;
+import com.transfer.entity.Account;
 import com.transfer.entity.Customer;
 import com.transfer.exception.ApplicationException;
 import com.transfer.exception.InvalidParameterException;
+import com.transfer.service.AccountService;
 import com.transfer.service.CustomerService;
 import org.apache.commons.lang.StringUtils;
 
@@ -15,10 +17,13 @@ import java.util.List;
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerDao customerDao;
+    private final AccountService accountService;
 
     @Inject
-    public CustomerServiceImpl(final CustomerDao customerDao) {
+    public CustomerServiceImpl(final CustomerDao customerDao,
+                               final AccountService accountService) {
         this.customerDao = customerDao;
+        this.accountService = accountService;
     }
 
     @Override
@@ -29,7 +34,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer softDeleteCustomer(long customerId) throws ApplicationException {
-        return null;
+        throw new RuntimeException("Not supported operation yet.");
     }
 
     @Override
@@ -38,13 +43,14 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> getCustomersByAccount(long accountNumber) throws ApplicationException {
-        return null;
+    public List<Customer> getCustomersOfAccount(String accountNumber) throws ApplicationException {
+        Account account = accountService.getAccountDetails(accountNumber);
+        return customerDao.getCustomersOfAccount(account);
     }
 
     @Override
     public Customer getCustomersByFirstAndLastName(String firstName, String lastName) throws ApplicationException {
-        return null;
+        throw new RuntimeException("Not supported operation.");
     }
 
     private void validateCustomerFields(Customer customer) throws InvalidParameterException {

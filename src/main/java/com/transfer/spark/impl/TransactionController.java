@@ -27,5 +27,17 @@ public class TransactionController implements SparkController {
             final UserTransaction userTransaction = fromJsonString(UserTransaction.class, body);
             return trasactionService.transferFunds(userTransaction);
         }, json());
+
+        post("transaction/withdraw", (req, res) -> {
+            final String body = req.body();
+            final UserTransaction userTransaction = fromJsonString(UserTransaction.class, body);
+            return trasactionService.withdraw(userTransaction.getAmount(), userTransaction.getFromAccountNumber());
+        }, json());
+
+        post("transaction/deposit", (req, res) -> {
+            final String body = req.body();
+            final UserTransaction userTransaction = fromJsonString(UserTransaction.class, body);
+            return trasactionService.deposit(userTransaction.getAmount(), userTransaction.getToAccountNumber());
+        }, json());
     }
 }

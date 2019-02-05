@@ -1,6 +1,7 @@
 package com.transfer.spark.impl;
 
 import com.google.inject.Singleton;
+import com.transfer.exception.ApplicationException;
 import com.transfer.spark.SparkController;
 import com.transfer.spark.util.ErrorDescription;
 
@@ -19,9 +20,15 @@ public class ErrorHandler implements SparkController {
 
         internalServerError(toJsonString(new ErrorDescription(500, "Internal server error.")));
 
-        exception(Exception.class, (e, req, res) -> {
+        exception(Exception.class, (exception, req, res) -> {
+            Exception appException = exception;
+
+            if (exception.getCause() != null) {
+                appException = new ApplicationException(exception.getCause());
+            }
+
             res.status(400);
-            res.body(toJsonString(new ErrorDescription(400, e.getMessage(), e.getMessage())));
+            res.body(toJsonString(new ErrorDescription(400, appException.getMessage(), appException.getMessage())));
         });
     }
 }

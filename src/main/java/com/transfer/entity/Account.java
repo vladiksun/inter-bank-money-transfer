@@ -9,11 +9,11 @@ public class Account implements Serializable {
 
     private static final long serialVersionUID = -5300324823123920796L;
 
-    private String accountNumber;
+    private String     accountNumber;
     private String     type;
     private String     description;
     private BigDecimal balance;
-    private String currencyCode;
+    private String     currencyCode;
 
     public Account() {}
 

@@ -5,6 +5,8 @@ import com.google.inject.Singleton;
 import com.transfer.dao.AccountDao;
 import com.transfer.entity.Account;
 import com.transfer.entity.Customer;
+import com.transfer.exception.AccountNotFoundException;
+import com.transfer.exception.ApplicationException;
 import com.transfer.jooq.stubs.tables.records.AccountRecord;
 import com.transfer.jooq.stubs.tables.records.CustomerAccountLinkRecord;
 import org.jooq.*;
@@ -64,19 +66,20 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
-    public Account getAccountDetails(String accountNumber) {
+    public Account getAccountDetails(String accountNumber) throws ApplicationException {
         DSLContext ctx = DSL.using(configuration);
 
-        return ctx.select()
+        return Optional.ofNullable(ctx.select()
                 .from(ACCOUNT)
                 .where(ACCOUNT.ACCOUNT_NUMBER.eq(accountNumber)
                         .and(ACCOUNT.SOFT_DELETED.isNull()))
-                .fetchOne()
-                .map(accountMapper);
+                .fetchOne())
+                .map(record -> accountMapper.map(record))
+                .orElseThrow(() -> new AccountNotFoundException(String.format("Account with number [ %s ] not found", accountNumber)));
     }
 
     @Override
-    public Account getAccountDetails(Account account) {
+    public Account getAccountDetails(Account account) throws ApplicationException {
         return getAccountDetails(account.getAccountNumber());
     }
 
@@ -97,29 +100,37 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
-    public Account softDeleteAccount(String accountNumber) {
+    public Account softDeleteAccount(String accountNumber) throws ApplicationException {
         DSLContext ctx = DSL.using(configuration);
 
-        return ctx.update(ACCOUNT)
-                .set(ACCOUNT.SOFT_DELETED, "TRUE")
-                .where(ACCOUNT.ACCOUNT_NUMBER.eq(accountNumber))
-                .returning()
-                .fetchOne()
-                .map(accountMapper);
+        return Optional.ofNullable(ctx.update(ACCOUNT)
+                                    .set(ACCOUNT.SOFT_DELETED, "TRUE")
+                                    .where(ACCOUNT.ACCOUNT_NUMBER.eq(accountNumber))
+                                    .returning()
+                                    .fetchOne()
+                )
+                .map(record -> accountMapper.map(record))
+                .orElseThrow(() -> new AccountNotFoundException(String.format("Account with number [ %s ] not found", accountNumber)));
     }
 
     @Override
     public Account lockAccount(Configuration txContext, String accountNumber) {
         return DSL.using(txContext)
                 .transactionResult(nestedTx ->
-                        DSL.using(nestedTx)
-                                    .select()
-                                    .from(ACCOUNT)
-                                    .where(ACCOUNT.ACCOUNT_NUMBER.eq(accountNumber)
-                                            .and(ACCOUNT.SOFT_DELETED.isNull()))
-                                    .forUpdate()
-                                    .fetchOne()
-                                    .map(accountMapper));
+                        Optional.ofNullable(
+                                DSL.using(nestedTx)
+                                        .select()
+                                        .from(ACCOUNT)
+                                        .where(ACCOUNT.ACCOUNT_NUMBER.eq(accountNumber)
+                                                .and(ACCOUNT.SOFT_DELETED.isNull()))
+                                        .forUpdate()
+                                        .fetchOne()
+
+                        )
+                        .map(record -> accountMapper.map(record))
+                        .orElseThrow(() -> new AccountNotFoundException(String.format("Account with number [ %s ] not found", accountNumber)))
+                );
+
     }
 
     @Override

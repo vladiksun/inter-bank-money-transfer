@@ -21,15 +21,20 @@ public class CustomerController implements SparkController {
 
     @Override
     public void init() {
-        post("/customers", (req, res) -> {
+        post("/customer", (req, res) -> {
             final String body = req.body();
             final Customer customerToCreate = fromJsonString(Customer.class, body);
             return customerService.createCustomer(customerToCreate);
         }, json());
 
-        get("/customers/:id", (req, res) -> {
+        get("/customer/:id", (req, res) -> {
             String customerID = req.params(":id");
             return customerService.getCustomerById(Long.valueOf(customerID));
+        }, json());
+
+        get("/customer/accounts/:accountNumber", (req, res) -> {
+            String accountNumber = req.params(":accountNumber");
+            return customerService.getCustomersOfAccount(accountNumber);
         }, json());
     }
 }

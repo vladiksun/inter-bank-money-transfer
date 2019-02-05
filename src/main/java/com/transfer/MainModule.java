@@ -1,10 +1,7 @@
 package com.transfer;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Singleton;
 import com.google.inject.name.Names;
-import com.transfer.dao.CustomerDao;
-import com.transfer.dao.impl.CustomerDaoImpl;
 import com.transfer.datasource.DataSources;
 import com.transfer.service.ServiceModule;
 import com.transfer.spark.ControllerModule;

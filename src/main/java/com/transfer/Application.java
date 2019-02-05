@@ -17,7 +17,6 @@ public class Application {
         activateSparkControllers(injector);
     }
 
-
     private void activateSparkControllers(Injector injector) {
         injector.getAllBindings().keySet().stream()
                 .filter(key -> SparkController.class.isAssignableFrom(key.getTypeLiteral().getRawType()))

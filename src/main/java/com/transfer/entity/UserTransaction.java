@@ -15,10 +15,11 @@ public class UserTransaction implements Serializable {
 
     private String toAccountNumber;
 
-    public UserTransaction(BigDecimal amount, String fromAccountId, String toAccountId) {
+
+    public UserTransaction(BigDecimal amount, String fromAccountNumber, String toAccountNumber) {
         this.amount = amount;
-        this.fromAccountNumber = fromAccountId;
-        this.toAccountNumber = toAccountId;
+        this.fromAccountNumber = fromAccountNumber;
+        this.toAccountNumber = toAccountNumber;
     }
 
     public BigDecimal getAmount() {
@@ -48,7 +49,7 @@ public class UserTransaction implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof UserTransaction)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         UserTransaction that = (UserTransaction) o;
         return Objects.equal(amount, that.amount) &&
                 Objects.equal(fromAccountNumber, that.fromAccountNumber) &&

@@ -37,7 +37,7 @@ public interface CustomerService {
      * @return <code>List<Customer></code>
      * @throws ApplicationException
      */
-    List<Customer> getCustomersByAccount(long accountNumber) throws ApplicationException;
+    List<Customer> getCustomersOfAccount(String accountNumber) throws ApplicationException;
 
     /**
      * Get customer by the last and first name

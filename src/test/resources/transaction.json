@@ -1,0 +1,20 @@
+{
+  "withdraw": {
+    "amount": 50000,
+    "fromAccountNumber": "1001"
+  },
+
+
+  "deposit": {
+    "amount": 50000,
+    "toAccountNumber": "1004"
+  },
+
+
+  "transfer": {
+    "amount": 1000.12,
+    "fromAccountNumber": "1001",
+    "toAccountNumber": "1004"
+  }
+
+}

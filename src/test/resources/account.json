@@ -1,0 +1,25 @@
+{
+
+  "create_account": {
+    "customerID": 1,
+    "account": {
+      "accountNumber": "2000",
+      "type": "SAVINGS",
+      "description": "",
+      "balance": 60000,
+      "currencyCode": "USD"
+    }
+
+  },
+
+  "add_customer_to_account": {
+    "customerID": 1,
+    "account": {
+      "accountNumber": "1006"
+    }
+
+  }
+
+
+
+}

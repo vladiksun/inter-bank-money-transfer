@@ -54,7 +54,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public TransactionLog withdraw(BigDecimal amount, String description, String accountNumber) throws ApplicationException {
+    public TransactionLog withdraw(BigDecimal amount, String accountNumber) throws ApplicationException {
         if (!Validator.isAccountNumberValid(accountNumber)) {
             throw new InvalidParameterException("Account number is not valid");
         }
@@ -89,7 +89,7 @@ public class TransactionServiceImpl implements TransactionService {
             accountDao.setAccountBalance(outerTx, account);
 
             TransactionLog transactionLog = new TransactionLog(account.getAccountNumber(),
-                                                                transactionMoney.getAmount(),
+                                                                transactionMoney.getAmount().negate(),
                                                                 accountMoney.getAmount(),
                                                                 new Timestamp(System.currentTimeMillis()));
 
@@ -100,7 +100,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public TransactionLog deposit(BigDecimal amount, String description, String accountNumber) throws ApplicationException {
+    public TransactionLog deposit(BigDecimal amount, String accountNumber) throws ApplicationException {
         if (!Validator.isAccountNumberValid(accountNumber)) {
             throw new InvalidParameterException("Account number is not valid");
         }
@@ -190,7 +190,7 @@ public class TransactionServiceImpl implements TransactionService {
             accountDao.setAccountBalance(configuration, toAccount);
 
             TransactionLog transactionLog = new TransactionLog(fromAccount.getAccountNumber(),
-                                                                transactionMoney.getAmount(),
+                                                                transactionMoney.getAmount().negate(),
                                                                 fromAccountMoney.getAmount(),
                                                                 new Timestamp(System.currentTimeMillis()));
 
