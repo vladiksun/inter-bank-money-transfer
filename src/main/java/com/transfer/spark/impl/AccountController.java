@@ -36,7 +36,7 @@ public class AccountController implements SparkController {
         }, json());
 
         get("/account/customers/:customerID", (req, res) -> {
-            long customerID = Long.valueOf(req.params(":customerID"));
+            long customerID = Long.parseLong(req.params(":customerID"));
             return accountService.getAccountsOfCustomer(customerID);
         }, json());
 
