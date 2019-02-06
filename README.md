@@ -15,6 +15,11 @@ $ java -jar uber-jar.jar -p 8080
 ```
 
 Application will start on port 8080 or whatever port you choose. H2 database tcp server will start automatically on address configured in config.properties file.
+TCP mode supports multiple connections so you can connect to database from IDE.
+```sh
+jdbc:h2:tcp://localhost:9092/~/H2/jooq-h2
+```
+
 
 ### REST endpoints
 | Http method | path |Comment|
