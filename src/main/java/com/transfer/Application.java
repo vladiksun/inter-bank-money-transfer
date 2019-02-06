@@ -12,7 +12,7 @@ import static spark.Spark.port;
 public class Application {
 
     @Parameter(names={"--port", "-p"})
-    int sparkPort;
+    private int sparkPort;
 
     public static void main(String[] args) {
         Application application = new Application();
