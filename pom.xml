@@ -235,6 +235,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
+                            <skip>true</skip>
                             <jdbc>
                                 <driver>${db.driver}</driver>
                                 <url>${db.url.inMemory}</url>
@@ -257,8 +258,8 @@
                                 </generate>
                                 <target>
                                     <packageName>com.transfer.jooq.stubs</packageName>
-                                    <directory>target/generated-sources/jooq-stubs</directory>
-                                    <!--<directory>src/main/java/com/transfer</directory>-->
+                                    <!--<directory>target/generated-sources/jooq-stubs</directory>-->
+                                    <directory>src/main/java/</directory>
                                 </target>
                             </generator>
                         </configuration>
