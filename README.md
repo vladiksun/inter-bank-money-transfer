@@ -14,7 +14,7 @@ $ mvn clean install
 $ java -jar uber-jar.jar -p 8080
 ```
 
-Application will start on port 8080 or whatever port you choose. H2 tcp server will start automatically on address configured in config.properties file.
+Application will start on port 8080 or whatever port you choose. H2 database tcp server will start automatically on address configured in config.properties file.
 
 ### REST endpoints
 | Http method | path |Comment|
