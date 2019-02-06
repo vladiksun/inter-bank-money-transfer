@@ -46,6 +46,6 @@ public interface CustomerService {
      * @return <code>List<Customer></code>
      * @throws ApplicationException
      */
-    Customer getCustomersByFirstAndLastName(String firstName, String lastName) throws ApplicationException;
+    List<Customer> getCustomersByFirstAndLastName(String firstName, String lastName) throws ApplicationException;
 
 }

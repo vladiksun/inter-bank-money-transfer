@@ -36,5 +36,11 @@ public class CustomerController implements SparkController {
             String accountNumber = req.params(":accountNumber");
             return customerService.getCustomersOfAccount(accountNumber);
         }, json());
+
+        get("/customer", (req, res) -> {
+            String firstNameLike = req.queryParams("firstName");
+            String lastNameLike = req.queryParams("lastName");
+            return customerService.getCustomersByFirstAndLastName(firstNameLike, lastNameLike);
+        }, json());
     }
 }

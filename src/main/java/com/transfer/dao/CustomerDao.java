@@ -13,4 +13,6 @@ public interface CustomerDao {
     Customer getCustomerById(long customerId) throws ApplicationException;
 
     List<Customer> getCustomersOfAccount(Account account);
+
+    List<Customer> getCustomersByFirstAndLastName(String firstName, String lastName);
 }

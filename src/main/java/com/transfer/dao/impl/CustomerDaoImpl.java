@@ -70,6 +70,19 @@ public class CustomerDaoImpl implements CustomerDao {
                 .join(CUSTOMER_ACCOUNT_LINK)
                 .on(CUSTOMER_ACCOUNT_LINK.CUSTOMER_ID.eq(CUSTOMER.CUSTOMER_ID)
                         .and(CUSTOMER_ACCOUNT_LINK.ACCOUNT_NUMBER.eq(account.getAccountNumber())))
+                .where(CUSTOMER.SOFT_DELETED.isNull())
                 .fetch().map(customerMapper);
+    }
+
+    @Override
+    public List<Customer> getCustomersByFirstAndLastName(String firstName, String lastName) {
+        DSLContext ctx = DSL.using(configuration);
+
+        return ctx.select()
+                .from(CUSTOMER)
+                .where(CUSTOMER.FIRST_NAME.like(String.format("%%%s%%", firstName))
+                        .and(CUSTOMER.LAST_NAME.like(String.format("%%%s%%", lastName))
+                        .and(CUSTOMER.SOFT_DELETED.isNull()))
+                ).fetch().map(customerMapper);
     }
 }

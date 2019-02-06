@@ -49,8 +49,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer getCustomersByFirstAndLastName(String firstName, String lastName) throws ApplicationException {
-        throw new RuntimeException("Not supported operation.");
+    public List<Customer> getCustomersByFirstAndLastName(String firstName, String lastName) throws ApplicationException {
+        return customerDao.getCustomersByFirstAndLastName(firstName, lastName);
     }
 
     private void validateCustomerFields(Customer customer) throws InvalidParameterException {
