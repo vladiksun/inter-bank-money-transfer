@@ -67,7 +67,7 @@ http://localhost:8080/account/addCustomer
     }
 }
 ```
-http://localhost:8080/account/transfer
+http://localhost:8080/transaction/transfer
 ```json
 {
     "amount": 2000,
@@ -75,14 +75,14 @@ http://localhost:8080/account/transfer
     "toAccountNumber": "1004"
 }
 ```
-http://localhost:8080/account/withdraw
+http://localhost:8080/transaction/withdraw
 ```json
 {
     "amount": 50000,
     "fromAccountNumber": "1001"
 }
 ```
-http://localhost:8080/account/deposit
+http://localhost:8080/transaction/deposit
 ```json
 {
     "amount": 50000,
